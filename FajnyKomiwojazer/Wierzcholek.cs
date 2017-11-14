@@ -26,5 +26,18 @@ namespace FajnyKomiwojazer
             set;
         }
 
+        public double Distance(Wierzcholek wierzcholek)
+        {
+            if (this == wierzcholek)
+            {
+                return 0.0;
+            }
+
+
+            double vx = wierzcholek.X - X;
+            double vy = wierzcholek.Y - Y;
+
+            return (Math.Sqrt(vx * vx + vy * vy));
+        }
     }
 }
