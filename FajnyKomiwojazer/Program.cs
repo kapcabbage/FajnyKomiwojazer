@@ -10,7 +10,6 @@ namespace FajnyKomiwojazer
     {
         static void Main(string[] args)
         {
-            Console.WriteLine(asd);
         }
     }
 }
