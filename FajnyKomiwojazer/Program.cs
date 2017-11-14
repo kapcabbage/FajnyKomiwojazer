@@ -10,7 +10,9 @@ namespace FajnyKomiwojazer
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("dziaua");
+            DAO dao = new DAO();
+            Graf graf = dao.GetGraf("kroA100.tsp", "kroB100.tsp");
+            Console.WriteLine("dasads");
         }
     }
 }
