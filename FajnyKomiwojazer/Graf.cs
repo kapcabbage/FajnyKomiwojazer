@@ -23,6 +23,20 @@ namespace FajnyKomiwojazer
             }
         }
 
+        public double Odleglosc(int indeks1, int indeks2)
+        {
+            if(indeks1 == indeks2)
+            {
+                return 0.0;
+            }
+
+
+            double vx = _wierzcholki[indeks1].X - _wierzcholki[indeks2].X;
+            double vy = _wierzcholki[indeks1].Y - _wierzcholki[indeks2].Y;
+
+            return (Math.Sqrt(vx*vx + vy*vy));
+        }
+
         public void AddWiercholek(Wierzcholek wiercholek)
         {
             _wierzcholki.Add(wiercholek);
