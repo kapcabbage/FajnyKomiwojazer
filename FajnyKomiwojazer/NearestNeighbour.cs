@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FajnyKomiwojazer
 {
@@ -22,7 +19,14 @@ namespace FajnyKomiwojazer
         {
             ComputedGraf.Wierzcholki = new List<Wierzcholek>();
             ComputedGraf.AddWiercholek(Graf.Wierzcholki[index]);
-            //while((ComputedGraf.DistanceSoFar*Weight))
+            var currentValue = 0.0;
+            var currentDistance = 0.0;
+            //while(currentValue < ComputedGraf.GetValueSoFar()-ComputedGraf.GetDistanceSoFar(Weight)&& ComputedGraf.Odleglosc(ComputedGraf.GetLast().Index,ComputedGraf.GetFirst().Index)*5 >)
+            while(true)
+            {
+                
+
+            }
 
             return ComputedGraf;
            
