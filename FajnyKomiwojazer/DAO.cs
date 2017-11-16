@@ -58,6 +58,7 @@ namespace FajnyKomiwojazer
                 {
                     graf.AddWiercholek(new Wierzcholek()
                     {
+                        Index = i,
                         X = Convert.ToDouble(wartosci1[1]),
                         Y = Convert.ToDouble(wartosci1[2]),
                         Wartosc = Convert.ToDouble(wartosci2[1]),

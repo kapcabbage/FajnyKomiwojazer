@@ -15,7 +15,7 @@ namespace FajnyKomiwojazer
             GreedyCycleWithRegrets alg = new GreedyCycleWithRegrets(graf);
             
             Graf solution = alg.Solve(1);
-
+            Console.WriteLine("Done, press any key");
             Console.ReadKey();
         }
     }

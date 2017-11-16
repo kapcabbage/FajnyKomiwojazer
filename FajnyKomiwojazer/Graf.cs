@@ -23,8 +23,6 @@ namespace FajnyKomiwojazer
                 _wierzcholki = value;
             }
         }
-
-
         public List<Krawedz> Krawedzie
         {
             get
@@ -37,6 +35,18 @@ namespace FajnyKomiwojazer
             }
         }
 
+        public Wierzcholek GetFirst()
+        {
+            return _wierzcholki.First();
+        }
+
+        public Wierzcholek GetLast()
+        {
+            return _wierzcholki.Last();
+        }
+
+
+
         public double Odleglosc(int indeks1, int indeks2)
         {
             return _wierzcholki[indeks1].Odleglosc(_wierzcholki[indeks2]);
@@ -45,6 +55,27 @@ namespace FajnyKomiwojazer
         public void AddWiercholek(Wierzcholek wiercholek)
         {
             _wierzcholki.Add(wiercholek);
+        }
+
+        public double GetDistanceSoFar(int weight)
+        {
+            var distance = 0.0;
+            for (int i = 1; i < _wierzcholki.Count; i++)
+            {
+                distance += Odleglosc(i - 1, i);
+            }
+            return distance * weight;
+        }
+
+        public double GetValueSoFar()
+        {
+            var value = 0.0;
+            for (int i = 0; i < _wierzcholki.Count; i++)
+            {
+                value += _wierzcholki[i].Wartosc;
+            }
+
+            return value;
         }
 
         public void AddKrawedz(Krawedz krawedz)
