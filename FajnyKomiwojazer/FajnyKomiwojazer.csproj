@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DAO.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="Graf.cs" />
     <Compile Include="GreedyCycle.cs" />
     <Compile Include="GreedyCycleWithRegrets.cs" />

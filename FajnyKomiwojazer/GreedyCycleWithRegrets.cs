@@ -8,6 +8,7 @@ namespace FajnyKomiwojazer
 {
     public class GreedyCycleWithRegrets
     {
+
         private Graf _solution;
         private List<Wierzcholek> _notUsed;
         private Graf _instance;
@@ -30,6 +31,8 @@ namespace FajnyKomiwojazer
             {
 
             }
+            SortSolution();
+            WypiszRozwiazanie();
             return _solution;
         }
 
@@ -59,6 +62,7 @@ namespace FajnyKomiwojazer
             return najlepsza;
         }
 
+
         private bool Step()
         {
             if(_notUsed.Count == 0)
@@ -83,6 +87,38 @@ namespace FajnyKomiwojazer
             else
             {
                 return false;
+            }
+        }
+
+
+        private void SortSolution()
+        {
+            for(int i = 0; i < _solution.Krawedzie.Count; i++)
+            {
+                Wierzcholek szukany = _solution.Krawedzie[i].Wierzcholek2;
+                Krawedz nastepna = null;
+                int iteNastepna = 0;
+                for (int j = i+1; j < _solution.Krawedzie.Count; j++)
+                {
+                    if(_solution.Krawedzie[j].Wierzcholek1 == szukany)
+                    {
+                        nastepna = _solution.Krawedzie[j];
+                        iteNastepna = j;
+                        break;
+                    }
+                }
+                if(nastepna != null)
+                {
+                    _solution.Krawedzie.Swap(i + 1, iteNastepna);
+                }
+            }
+        }
+
+        private void WypiszRozwiazanie()
+        {
+            foreach(Krawedz krawedz in _solution.Krawedzie)
+            {
+                Console.WriteLine($"{krawedz.Wierzcholek1.Indeks} {krawedz.Wierzcholek2.Indeks}");
             }
         }
     }
