@@ -20,13 +20,19 @@ namespace FajnyKomiwojazer
             set;
         }
 
-        public Double Value
+        public Double Wartosc
         {
             get;
             set;
         }
 
-        public double Distance(Wierzcholek wierzcholek)
+        public int Indeks
+        {
+            get;
+            set;
+        }
+
+        public double Odleglosc(Wierzcholek wierzcholek)
         {
             if (this == wierzcholek)
             {
@@ -37,7 +43,7 @@ namespace FajnyKomiwojazer
             double vx = wierzcholek.X - X;
             double vy = wierzcholek.Y - Y;
 
-            return (Math.Sqrt(vx * vx + vy * vy));
+            return 5 * Math.Sqrt(vx * vx + vy * vy);
         }
     }
 }
