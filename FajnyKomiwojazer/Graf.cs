@@ -32,5 +32,15 @@ namespace FajnyKomiwojazer
         {
             _wierzcholki.Add(wiercholek);
         }
+
+        public double DistanceSoFar()
+        {
+            var distance = 0.0;
+            for(int i =1; i<_wierzcholki.Count;i++)
+            {
+                distance += Odleglosc(i - 1, i);
+            }
+            return distance;
+        }
     }
 }
