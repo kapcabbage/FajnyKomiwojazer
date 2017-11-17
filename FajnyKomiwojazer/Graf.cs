@@ -57,15 +57,26 @@ namespace FajnyKomiwojazer
             _wierzcholki.Add(wiercholek);
         }
 
-        public double GetDistanceSoFar(int weight)
+        public double GetDistanceSoFar()
         {
             var distance = 0.0;
             for (int i = 1; i < _wierzcholki.Count; i++)
             {
                 distance += Odleglosc(i - 1, i);
             }
-            return distance * weight;
+            return distance;
         }
+
+        public double GetDistanceSoFarByEdge()
+        {
+            var distance = 0.0;
+            foreach(var edge in _krawedzie)
+            {
+                distance += edge.Dlugosc;
+            }
+            return distance;
+        }
+
 
         public double GetValueSoFar()
         {
@@ -73,6 +84,17 @@ namespace FajnyKomiwojazer
             for (int i = 0; i < _wierzcholki.Count; i++)
             {
                 value += _wierzcholki[i].Wartosc;
+            }
+
+            return value;
+        }
+
+        public double GetValueSoFarByEdge()
+        {
+            var value = 0.0;
+            foreach (var edge in _krawedzie)
+            {
+                value += edge.Wierzcholek2.Wartosc;
             }
 
             return value;

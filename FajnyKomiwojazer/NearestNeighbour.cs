@@ -7,12 +7,10 @@ namespace FajnyKomiwojazer
     {
         private Graf ComputedGraf;
         private Graf Graf;
-        private int Weight;
 
-        public NearestNeighbour(Graf graf, int weight )
+        public NearestNeighbour(Graf graf)
         {
             this.Graf = graf;
-            this.Weight = weight;
         }
 
         public Graf Compute(int index)
@@ -22,14 +20,18 @@ namespace FajnyKomiwojazer
             ComputedGraf.AddWiercholek(Graf.Wierzcholki[index]);
             var currentValue = 0.0;
             var currentDistance = 0.0;
+            var distanceToFirst = 0.0;
             //while(currentValue < ComputedGraf.GetValueSoFar()-ComputedGraf.GetDistanceSoFar(Weight)&& ComputedGraf.Odleglosc(ComputedGraf.GetLast().Index,ComputedGraf.GetFirst().Index)*5 >)
-            while(currentValue >= currentDistance * Weight)
+            while((currentValue >= currentDistance || currentValue >= distanceToFirst))
             {
                 var computedNode = FindNext();
-                currentValue = computedNode.Value;
-                currentDistance = Graf.Odleglosc(ComputedGraf.GetFirst().Index, computedNode.Index);
+                if (computedNode == null) break;
+                currentValue = computedNode.Wartosc;
+                currentDistance = Graf.Odleglosc(ComputedGraf.GetLast().Index, computedNode.Index);
+                distanceToFirst = Graf.Odleglosc(ComputedGraf.GetLast().Index, ComputedGraf.GetFirst().Index);
                 ComputedGraf.AddWiercholek(computedNode);
             }
+            ComputedGraf.AddWiercholek(ComputedGraf.GetFirst());
 
             return ComputedGraf;
            
@@ -37,18 +39,20 @@ namespace FajnyKomiwojazer
 
         public Wierzcholek FindNext()
         {
-            var distance = 0.0;
-            var index = 0;
+            var value = 0.0;
+            var index = -1;
+            var last = ComputedGraf.GetLast();
             foreach (var node in Graf.Wierzcholki.Where(x => !ComputedGraf.Wierzcholki.Contains(x)))
             {
-                var last = ComputedGraf.GetLast();
                 var computedDistance = Graf.Odleglosc(last.Index, node.Index);
-                if (distance < computedDistance)
+                var computedValue = node.Wartosc - computedDistance;
+                if (computedValue > value )
                 {
-                    distance = computedDistance;
+                    value = computedValue;
                     index = node.Index;
                 }
             }
+            if (index == -1) return null;
 
             return Graf.Wierzcholki[index];
         }
