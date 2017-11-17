@@ -61,7 +61,8 @@ namespace FajnyKomiwojazer
                         Index = i,
                         X = Convert.ToDouble(wartosci1[1]),
                         Y = Convert.ToDouble(wartosci1[2]),
-                        Value = Convert.ToDouble(wartosci2[1])
+                        Wartosc = Convert.ToDouble(wartosci2[1]),
+                        Indeks = i
                     });
                 }
                 catch

@@ -12,8 +12,11 @@ namespace FajnyKomiwojazer
         {
             DAO dao = new DAO();
             Graf graf = dao.GetGraf("kroA100.tsp", "kroB100.tsp");
+            GreedyCycleWithRegrets alg = new GreedyCycleWithRegrets(graf);
             
-            Console.WriteLine(graf.DistanceSoFar());
+            Graf solution = alg.Solve(1);
+            Console.WriteLine("Done, press any key");
+            Console.ReadKey();
         }
     }
 }
