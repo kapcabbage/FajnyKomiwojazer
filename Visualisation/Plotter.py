@@ -35,16 +35,21 @@ class Plotter:
         X = list(v.X for v in self.Vertices)
         Y = list(v.Y for v in self.Vertices)
         plt.plot(X, Y, 'ro')
-		
+        
         plt.xticks(np.arange(0, max(X)+100, 500))
         plt.yticks(np.arange(0, max(Y)+100, 500))
         for v in self.Vertices:
-            plt.annotate(v, (v.X + 15, v.Y - 5))
+            if any(160 > v2.X - v.X > 0 and 40 > abs(v2.Y - v.Y) >= 0 for v2 in self.Vertices):
+                plt.annotate(v, (v.X - 15, v.Y - 5), horizontalalignment='right')
+            else:
+                plt.annotate(v, (v.X + 15, v.Y - 5))
+                
+            
         
         for edge in self.Edges:
             v1 = self.Vertices[edge[0]]
             v2 = self.Vertices[edge[1]]
-            plt.plot([v1.X, v2.X],  [v1.Y, v2.Y], color='k', linestyle='-')
+            plt.plot([v1.X, v2.X],  [v1.Y, v2.Y], color='lightgray', linestyle='-')
         
         plt.show()
         
