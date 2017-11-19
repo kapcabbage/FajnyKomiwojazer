@@ -35,10 +35,11 @@ class Plotter:
         X = list(v.X for v in self.Vertices)
         Y = list(v.Y for v in self.Vertices)
         plt.plot(X, Y, 'ro')
+		
         plt.xticks(np.arange(0, max(X)+100, 500))
         plt.yticks(np.arange(0, max(Y)+100, 500))
         for v in self.Vertices:
-            plt.annotate(v, (v.X, v.Y))
+            plt.annotate(v, (v.X + 15, v.Y - 5))
         
         for edge in self.Edges:
             v1 = self.Vertices[edge[0]]
