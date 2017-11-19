@@ -109,5 +109,24 @@ namespace FajnyKomiwojazer
         {
             return _wierzcholki[indeks];
         }
+
+        public void SaveToFile(string fullPath)
+        {
+            using (System.IO.StreamWriter file = new System.IO.StreamWriter(fullPath))
+            {
+                foreach (Wierzcholek wierzcholek in _wierzcholki)
+                {
+                    file.WriteLine(String.Format("{0} {1} {2} {3}", wierzcholek.Indeks, wierzcholek.Wartosc, wierzcholek.X, wierzcholek.Y));
+                }
+
+                file.WriteLine();
+
+                foreach(Krawedz krawedz in _krawedzie)
+                {
+                    file.WriteLine(String.Format("{0} {1}", krawedz.Wierzcholek1.Indeks, krawedz.Wierzcholek2.Indeks));
+                }
+            }
+
+        }
     }
 }

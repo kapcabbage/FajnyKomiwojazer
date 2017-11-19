@@ -12,24 +12,27 @@ namespace FajnyKomiwojazer
         {
             DAO dao = new DAO();
             Graf graf = dao.GetGraf("kroA100.tsp", "kroB100.tsp");
-            GreedyCycleWithRegrets alg = new GreedyCycleWithRegrets(graf);
+            GreedyCycleWithRegrets algGCR = new GreedyCycleWithRegrets(graf);
             NearestNeighbour algNN = new NearestNeighbour(graf);
             GreedyCycle algGC = new GreedyCycle(graf);
-            for (int i = 0; i < graf.Wierzcholki.Count; i++)
-            {
-                Graf nn = algNN.Compute(i);
-                Console.WriteLine(i);
-                Console.WriteLine(nn.GetValueSoFar()-nn.GetDistanceSoFar());
-            }
-            for (int i = 0; i < graf.Wierzcholki.Count; i++)
-            {
-                Graf nn = algGC.Solve(i);
-                Console.WriteLine(i);
-                Console.WriteLine(nn.GetValueSoFarByEdge() - nn.GetDistanceSoFarByEdge());
-            }
-            //Graf na = algNN.Compute(73);
-            //Graf solution = alg.Solve(1);
-            //Console.WriteLine(solution.GetValueSoFarByEdge()- solution.GetDistanceSoFarByEdge());
+            //for (int i = 0; i < graf.Wierzcholki.Count; i++)
+            //{
+            //    Graf nn = algNN.Compute(i);
+            //    Console.WriteLine(i);
+            //    Console.WriteLine(nn.GetValueSoFar()-nn.GetDistanceSoFar());
+            //}
+            //for (int i = 0; i < graf.Wierzcholki.Count; i++)
+            //{
+            //    Graf nn = algGC.Solve(i);
+            //    Console.WriteLine(i);
+            //    Console.WriteLine(nn.GetValueSoFarByEdge() - nn.GetDistanceSoFarByEdge());
+            //}
+
+
+            Graf gcr = algGCR.Solve(1);
+
+            gcr.SaveToFile("1.txt");
+
             Console.WriteLine("Done, press any key");
             Console.ReadKey();
         }

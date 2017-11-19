@@ -32,7 +32,6 @@ namespace FajnyKomiwojazer
 
             }
             SortSolution();
-            WypiszRozwiazanie();
             return _solution;
         }
 
