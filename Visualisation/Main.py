@@ -1,5 +1,5 @@
 from Plotter import Plotter
 
 plotter = Plotter()
-plotter.load("nn.txt")
+plotter.load("31.txt")
 plotter.plot(0)

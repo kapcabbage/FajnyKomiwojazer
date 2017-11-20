@@ -8,6 +8,7 @@ namespace FajnyKomiwojazer
 {
     class Program
     {
+        [STAThread]
         static void Main(string[] args)
         {
             DAO dao = new DAO();
@@ -43,6 +44,7 @@ namespace FajnyKomiwojazer
             Console.WriteLine(gcmean);
             Console.WriteLine(gcval.Max());
 
+            
             for (int i = 0; i < graf.Wierzcholki.Count; i++)
             {
                 Console.WriteLine(i);
@@ -56,6 +58,11 @@ namespace FajnyKomiwojazer
             Console.WriteLine(gcrmean);
             Console.WriteLine(gcval.Max());
             Console.WriteLine(gcrmaxIndex);
+
+
+            Graf gcr31 = algGCR.Solve(31);
+            gcr31.SaveToFile("31.txt");
+            gcr31.CopyCycleToClipboard();
 
 
             Console.WriteLine("Done, press any key");

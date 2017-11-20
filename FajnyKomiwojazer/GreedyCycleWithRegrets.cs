@@ -93,7 +93,7 @@ namespace FajnyKomiwojazer
 
             if (oplacalne.Count() > 0)
             {
-                var newStats = statystyki.ToList().Select(s =>
+                var newStats = oplacalne.ToList().Select(s =>
                 {
                     Wierzcholek v = s.Wierzcholek;
                     return new { Wierzcholek = v, Zal = Regret(v, oplacalne.Select(ver => ver.Wierzcholek).ToList()), Przecinana = s.Przecinana };

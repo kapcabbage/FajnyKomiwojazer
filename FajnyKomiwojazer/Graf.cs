@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace FajnyKomiwojazer
 {
@@ -126,7 +127,26 @@ namespace FajnyKomiwojazer
                     file.WriteLine(String.Format("{0} {1}", krawedz.Wierzcholek1.Indeks, krawedz.Wierzcholek2.Indeks));
                 }
             }
+        }
 
+        /// <summary>
+        /// Zakładamy, że cykl istnieje i krawędzie są zgodnie z nim posortowana
+        /// </summary>
+        public void CopyCycleToClipboard()
+        {
+            if(Krawedzie.Count == 0)
+            {
+                return;
+            }
+
+            StringBuilder sb = new StringBuilder();
+            sb.Append(Krawedzie[0].Wierzcholek1.Indeks);
+            foreach (Krawedz e in Krawedzie)
+            {
+                sb.Append($" -> {e.Wierzcholek2.Indeks}");
+            }
+
+            Clipboard.SetText(sb.ToString());
         }
     }
 }
