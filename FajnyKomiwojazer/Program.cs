@@ -42,11 +42,22 @@ namespace FajnyKomiwojazer
             Console.WriteLine(gcmin);
             Console.WriteLine(gcmean);
             Console.WriteLine(gcval.Max());
-            Graf gnn = algNN.Compute(maxIndex);
-            Graf gcr = algGCR.Solve(1);
 
-            gcr.SaveToFile("1.txt");
-            gnn.SaveToFile(@"D:\Dokumenty\Source\Repos\FajnyKomiwojazer\Visualisation\nn.txt");
+            for (int i = 0; i < graf.Wierzcholki.Count; i++)
+            {
+                Console.WriteLine(i);
+                Graf gcr = algGCR.Solve(i);
+                gcval[i] = gcr.GetValueSoFarByEdge() - gcr.GetDistanceSoFarByEdge();
+            }
+            var gcrmaxIndex = gcval.ToList().IndexOf(gcval.Max());
+            var gcrmin = gcval.Min();
+            var gcrmean = gcval.Average();
+            Console.WriteLine(gcrmin);
+            Console.WriteLine(gcrmean);
+            Console.WriteLine(gcval.Max());
+            Console.WriteLine(gcrmaxIndex);
+
+
             Console.WriteLine("Done, press any key");
             Console.ReadKey();
         }

@@ -18,6 +18,11 @@ namespace FajnyKomiwojazer
         public GreedyCycle(Graf graf)
         {
             _instance = graf;
+            Clean();
+        }
+
+        private void Clean()
+        {
             _solution = new Graf();
             _solution.Wierzcholki = _instance.Wierzcholki.ToList();
             _notUsed = _instance.Wierzcholki.ToList();
@@ -25,6 +30,7 @@ namespace FajnyKomiwojazer
 
         public Graf Solve(int start)
         {
+            Clean();
             Wierzcholek wierzcholek = _solution.GetWiercholek(start);
             _solution.Krawedzie.Add(new Krawedz(wierzcholek, wierzcholek));
             _notUsed.Remove(wierzcholek);

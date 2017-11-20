@@ -27,8 +27,8 @@ namespace FajnyKomiwojazer
                 var computedNode = FindNext();
                 if (computedNode == null) break;
                 currentValue = computedNode.Wartosc;
-                currentDistance = Graf.Odleglosc(ComputedGraf.GetLast().Index, computedNode.Index);
-                distanceToFirst = Graf.Odleglosc(ComputedGraf.GetLast().Index, ComputedGraf.GetFirst().Index);
+                currentDistance = Graf.Odleglosc(ComputedGraf.GetLast().Indeks, computedNode.Indeks);
+                distanceToFirst = Graf.Odleglosc(ComputedGraf.GetLast().Indeks, ComputedGraf.GetFirst().Indeks);
                 ComputedGraf.AddWiercholek(computedNode);
             }
             ComputedGraf.AddWiercholek(ComputedGraf.GetFirst());
@@ -45,12 +45,12 @@ namespace FajnyKomiwojazer
             var last = ComputedGraf.GetLast();
             foreach (var node in Graf.Wierzcholki.Where(x => !ComputedGraf.Wierzcholki.Contains(x)))
             {
-                var computedDistance = Graf.Odleglosc(last.Index, node.Index);
+                var computedDistance = Graf.Odleglosc(last.Indeks, node.Indeks);
                 var computedValue = node.Wartosc - computedDistance;
                 if (computedValue > value )
                 {
                     value = computedValue;
-                    index = node.Index;
+                    index = node.Indeks;
                 }
             }
             if (index == -1) return null;

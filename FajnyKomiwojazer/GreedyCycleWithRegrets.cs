@@ -12,7 +12,6 @@ namespace FajnyKomiwojazer
         private Graf _solution;
         private List<Wierzcholek> _notUsed;
         private Graf _instance;
-        private double _profit;
 
         public GreedyCycleWithRegrets(Graf graf)
         {
@@ -50,6 +49,14 @@ namespace FajnyKomiwojazer
             _notUsed.Remove(wierzcholek);
         }
 
+        private void RollBack(Krawedz removed)
+        {
+            _solution.Krawedzie.Remove(_solution.Krawedzie.Last());
+            _notUsed.Add(_solution.Krawedzie.Last().Wierzcholek2);
+            _solution.Krawedzie.Remove(_solution.Krawedzie.Last());
+            _solution.Krawedzie.Add(removed);
+        }
+
 
         private Krawedz BestGainEdge(Wierzcholek wierzcholek, out double zysk)
         {
@@ -82,17 +89,47 @@ namespace FajnyKomiwojazer
                 return new { Wierzcholek = v, Zysk = zysk, Przecinana = przecinana };
             });
 
-            var ranking = statystyki.OrderBy(s => -1 * s.Zysk);
+            var oplacalne = statystyki.Where(s => s.Zysk >= 0);
 
-            if (ranking.First().Zysk > 0)
+            if (oplacalne.Count() > 0)
             {
+                var newStats = statystyki.ToList().Select(s =>
+                {
+                    Wierzcholek v = s.Wierzcholek;
+                    return new { Wierzcholek = v, Zal = Regret(v, oplacalne.Select(ver => ver.Wierzcholek).ToList()), Przecinana = s.Przecinana };
+                });
+                var ranking = newStats.ToList().OrderBy(s => -1 * s.Zal);
+
                 AddToSolution(ranking.First().Wierzcholek, ranking.First().Przecinana);
+
                 return true;
             }
             else
             {
                 return false;
             }
+        }
+
+
+        private double Regret(Wierzcholek v, List<Wierzcholek> vertices)
+        {
+            double regret = 0;
+            double gainNow;
+            BestGainEdge(v, out gainNow);
+            foreach(Wierzcholek other in vertices.Where(ver => ver != v))
+            {
+                double notUsed;
+                Krawedz tmpEdge = BestGainEdge(other, out notUsed);
+
+                AddToSolution(other, tmpEdge);
+                double gainLater;
+                BestGainEdge(v, out gainLater);
+                RollBack(tmpEdge);
+
+                regret += gainNow - gainLater;
+            }
+
+            return regret;
         }
 
 

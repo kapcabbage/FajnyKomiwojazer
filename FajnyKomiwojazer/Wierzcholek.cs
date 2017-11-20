@@ -8,8 +8,6 @@ namespace FajnyKomiwojazer
 {
     public class Wierzcholek
     {
-        public int Index { get; set; }
-
         public Double X
         {
             get;
