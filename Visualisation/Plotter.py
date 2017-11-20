@@ -19,7 +19,6 @@ class Plotter:
             fields = line.split(" ")
             if len(fields) == 2:
                 self.Edges.append([int(fields[0]), int(fields[1])])
-            
             if len(fields) == 4:
                 ver = Verticle()
                 ver.Index = int(fields[0])
@@ -27,6 +26,7 @@ class Plotter:
                 ver.X = int(fields[2])
                 ver.Y = int(fields[3])
                 self.Vertices.append(ver)
+
 
     def plot(self, steptime):
         fig = plt.figure()
@@ -47,6 +47,8 @@ class Plotter:
             
         
         for edge in self.Edges:
+            print(edge[1])
+            print (self.Vertices[edge[1]])
             v1 = self.Vertices[edge[0]]
             v2 = self.Vertices[edge[1]]
             plt.plot([v1.X, v2.X],  [v1.Y, v2.Y], color='lightgray', linestyle='-')

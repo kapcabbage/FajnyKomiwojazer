@@ -21,7 +21,7 @@ namespace FajnyKomiwojazer
             var currentValue = 0.0;
             var currentDistance = 0.0;
             var distanceToFirst = 0.0;
-            //while(currentValue < ComputedGraf.GetValueSoFar()-ComputedGraf.GetDistanceSoFar(Weight)&& ComputedGraf.Odleglosc(ComputedGraf.GetLast().Index,ComputedGraf.GetFirst().Index)*5 >)
+
             while((currentValue >= currentDistance || currentValue >= distanceToFirst))
             {
                 var computedNode = FindNext();
@@ -32,7 +32,8 @@ namespace FajnyKomiwojazer
                 ComputedGraf.AddWiercholek(computedNode);
             }
             ComputedGraf.AddWiercholek(ComputedGraf.GetFirst());
-
+            ConvertToEdges();
+            ComputedGraf.Wierzcholki = Graf.Wierzcholki;
             return ComputedGraf;
            
         }
@@ -55,6 +56,17 @@ namespace FajnyKomiwojazer
             if (index == -1) return null;
 
             return Graf.Wierzcholki[index];
+        }
+
+        public void ConvertToEdges()
+        {
+            for(int i =0; i < ComputedGraf.Wierzcholki.Count; i++)
+            {
+                if (i+1 !=  ComputedGraf.Wierzcholki.Count )
+                {
+                    ComputedGraf.AddKrawedz(new Krawedz(ComputedGraf.Wierzcholki[i], ComputedGraf.Wierzcholki[i + 1]));
+                }
+            }
         }
     }
 }

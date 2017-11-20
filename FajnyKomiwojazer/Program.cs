@@ -15,24 +15,38 @@ namespace FajnyKomiwojazer
             GreedyCycleWithRegrets algGCR = new GreedyCycleWithRegrets(graf);
             NearestNeighbour algNN = new NearestNeighbour(graf);
             GreedyCycle algGC = new GreedyCycle(graf);
-            //for (int i = 0; i < graf.Wierzcholki.Count; i++)
-            //{
-            //    Graf nn = algNN.Compute(i);
-            //    Console.WriteLine(i);
-            //    Console.WriteLine(nn.GetValueSoFar()-nn.GetDistanceSoFar());
-            //}
-            //for (int i = 0; i < graf.Wierzcholki.Count; i++)
-            //{
-            //    Graf nn = algGC.Solve(i);
-            //    Console.WriteLine(i);
-            //    Console.WriteLine(nn.GetValueSoFarByEdge() - nn.GetDistanceSoFarByEdge());
-            //}
-
-
+            var nnval = new double[graf.Wierzcholki.Count];
+            var gcval = new double[graf.Wierzcholki.Count];
+            for (int i = 0; i < graf.Wierzcholki.Count; i++)
+            {
+                Graf nn = algNN.Compute(i);
+                nnval[i] = nn.GetValueSoFarByEdge() - nn.GetDistanceSoFarByEdge();
+                //Console.WriteLine(nnval[i]);
+               
+            }
+            Console.WriteLine(nnval.Max());
+            var maxIndex = nnval.ToList().IndexOf(nnval.Max());
+            var min = nnval.Min();
+            var mean = nnval.Average();
+            Console.WriteLine(min);
+            Console.WriteLine(mean);
+            Console.WriteLine(nnval.Max());
+            for (int i = 0; i < graf.Wierzcholki.Count; i++)
+            {
+                Graf nn = algGC.Solve(i);
+                gcval[i] = nn.GetValueSoFarByEdge() - nn.GetDistanceSoFarByEdge();
+            }
+            var gcmaxIndex = gcval.ToList().IndexOf(gcval.Max());
+            var gcmin = gcval.Min();
+            var gcmean = gcval.Average();
+            Console.WriteLine(gcmin);
+            Console.WriteLine(gcmean);
+            Console.WriteLine(gcval.Max());
+            Graf gnn = algNN.Compute(maxIndex);
             Graf gcr = algGCR.Solve(1);
 
             gcr.SaveToFile("1.txt");
-
+            gnn.SaveToFile(@"D:\Dokumenty\Source\Repos\FajnyKomiwojazer\Visualisation\nn.txt");
             Console.WriteLine("Done, press any key");
             Console.ReadKey();
         }
