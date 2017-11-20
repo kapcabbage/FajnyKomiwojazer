@@ -22,7 +22,7 @@ namespace FajnyKomiwojazer
             var currentDistance = 0.0;
             var distanceToFirst = 0.0;
 
-            while((currentValue >= currentDistance || currentValue >= distanceToFirst))
+            while(currentValue >= currentDistance)
             {
                 var computedNode = FindNext();
                 if (computedNode == null) break;

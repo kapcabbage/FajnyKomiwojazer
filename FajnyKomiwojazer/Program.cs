@@ -47,7 +47,6 @@ namespace FajnyKomiwojazer
             
             for (int i = 0; i < graf.Wierzcholki.Count; i++)
             {
-                Console.WriteLine(i);
                 Graf gcr = algGCR.Solve(i);
                 gcval[i] = gcr.GetValueSoFarByEdge() - gcr.GetDistanceSoFarByEdge();
             }
@@ -58,11 +57,6 @@ namespace FajnyKomiwojazer
             Console.WriteLine(gcrmean);
             Console.WriteLine(gcval.Max());
             Console.WriteLine(gcrmaxIndex);
-
-
-            Graf gcr31 = algGCR.Solve(31);
-            gcr31.SaveToFile("31.txt");
-            gcr31.CopyCycleToClipboard();
 
 
             Console.WriteLine("Done, press any key");
