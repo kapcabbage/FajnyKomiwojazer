@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{08AECA1B-1186-47D4-941C-3A25D426A8EC}</ProjectGuid>
+    <ProjectGuid>{FBD8EFBA-D863-402A-A23E-7AAFFC39DED5}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FajnyKomiwojazer</RootNamespace>
-    <AssemblyName>FajnyKomiwojazer</AssemblyName>
+    <RootNamespace>NN</RootNamespace>
+    <AssemblyName>NN</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -33,7 +33,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -42,29 +41,13 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DAO.cs" />
-    <Compile Include="Extensions.cs" />
-    <Compile Include="Graf.cs" />
-    <Compile Include="GreedyCycle.cs" />
-    <Compile Include="GreedyCycleWithRegrets.cs" />
-    <Compile Include="Krawedz.cs" />
-    <Compile Include="NearestNeighbour.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RandomCycle.cs" />
-    <Compile Include="Wierzcholek.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="kroA100.tsp">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="kroB100.tsp">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -9,7 +9,6 @@ namespace FajnyKomiwojazer
     public class GreedyCycle
     {
 
-
         private Graf _solution;
         private List<Wierzcholek> _notUsed;
         private Graf _instance;
