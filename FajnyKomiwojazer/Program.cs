@@ -43,11 +43,18 @@ namespace FajnyKomiwojazer
                 Console.WriteLine(i);
             }
             var gcmaxIndex = gcval.ToList().IndexOf(gcval.Max());
-            var gcmin = gcval.Min();
-            var gcmean = gcval.Average();
-            Console.WriteLine(gcmin);
-            Console.WriteLine(gcmean);
+            Console.WriteLine(gcval.Min());
+            Console.WriteLine(gcval.Average());
             Console.WriteLine(gcval.Max());
+            Console.WriteLine(gcmaxIndex);
+            
+            Graf gc2 = algGC.Solve(gcmaxIndex);
+            gc2.SaveToFile(String.Format($@"..\..\..\Visualisation\GC{gcmaxIndex}.txt"));
+            LocalSearch localSearch2 = new LocalSearch(graf, gc2);
+            Graf ls2 = localSearch2.Solve();
+            ls2.SaveToFile(String.Format($@"..\..\..\Visualisation\GCLS{gcmaxIndex}.txt"));
+
+
 
 
             //for (int i = 0; i < graf.Wierzcholki.Count; i++)

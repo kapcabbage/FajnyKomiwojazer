@@ -13,6 +13,16 @@ namespace FajnyKomiwojazer
         private List<Krawedz> _krawedzie = new List<Krawedz>();
 
 
+        public List<Krawedz> GetKrawedzie()
+        {
+            return _krawedzie.ToList();
+        }
+
+        public List<Wierzcholek> GetWierzcholki()
+        {
+            return _wierzcholki.ToList();
+        }
+
         public List<Wierzcholek> Wierzcholki
         {
             get
@@ -104,6 +114,15 @@ namespace FajnyKomiwojazer
         public void AddKrawedz(Krawedz krawedz)
         {
             _krawedzie.Add(krawedz);
+            krawedz.Wierzcholek1.Krawedzie.Add(krawedz);
+            krawedz.Wierzcholek2.Krawedzie.Add(krawedz);
+        }
+
+        public void RemoveKrawedz(Krawedz krawedz)
+        {
+            _krawedzie.Remove(krawedz);
+            krawedz.Wierzcholek1.Krawedzie.Remove(krawedz);
+            krawedz.Wierzcholek2.Krawedzie.Remove(krawedz);
         }
 
         public Wierzcholek GetWiercholek(int indeks)
@@ -134,14 +153,14 @@ namespace FajnyKomiwojazer
         /// </summary>
         public void CopyCycleToClipboard()
         {
-            if(Krawedzie.Count == 0)
+            if(_krawedzie.Count == 0)
             {
                 return;
             }
 
             StringBuilder sb = new StringBuilder();
-            sb.Append(Krawedzie[0].Wierzcholek1.Indeks);
-            foreach (Krawedz e in Krawedzie)
+            sb.Append(_krawedzie[0].Wierzcholek1.Indeks);
+            foreach (Krawedz e in _krawedzie)
             {
                 sb.Append($" -> {e.Wierzcholek2.Indeks}");
             }

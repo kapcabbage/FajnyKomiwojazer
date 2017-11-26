@@ -8,6 +8,8 @@ namespace FajnyKomiwojazer
 {
     public class Wierzcholek
     {
+        private List<Krawedz> _krawedzie = new List<Krawedz>();
+
         public Double X
         {
             get;
@@ -44,6 +46,24 @@ namespace FajnyKomiwojazer
             double vy = wierzcholek.Y - Y;
 
             return 5 * Math.Sqrt(vx * vx + vy * vy);
+        }
+        
+
+        public override string ToString()
+        {
+            return String.Format($"V{Indeks}");
+        }
+
+        public List<Krawedz> Krawedzie
+        {
+            get
+            {
+                return _krawedzie;
+            }
+            set
+            {
+                _krawedzie = value;
+            }
         }
     }
 }
