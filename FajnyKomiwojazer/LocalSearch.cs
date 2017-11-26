@@ -96,6 +96,7 @@ namespace FajnyKomiwojazer
             {
                 //IsValid();
             }
+            SortSolution();
             return _solution;
         }
 
