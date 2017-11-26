@@ -24,7 +24,7 @@ namespace FajnyKomiwojazer
             //    Graf nn = algNN.Compute(i);
             //    nnval[i] = nn.GetValueSoFarByEdge() - nn.GetDistanceSoFarByEdge();
             //    //Console.WriteLine(nnval[i]);
-               
+
             //}
             //Console.WriteLine(nnval.Max());
             //var maxIndex = nnval.ToList().IndexOf(nnval.Max());
@@ -33,19 +33,23 @@ namespace FajnyKomiwojazer
             //Console.WriteLine(min);
             //Console.WriteLine(mean);
             //Console.WriteLine(nnval.Max());
-            //for (int i = 0; i < graf.Wierzcholki.Count; i++)
-            //{
-            //    Graf nn = algGC.Solve(i);
-            //    gcval[i] = nn.GetValueSoFarByEdge() - nn.GetDistanceSoFarByEdge();
-            //}
-            //var gcmaxIndex = gcval.ToList().IndexOf(gcval.Max());
-            //var gcmin = gcval.Min();
-            //var gcmean = gcval.Average();
-            //Console.WriteLine(gcmin);
-            //Console.WriteLine(gcmean);
-            //Console.WriteLine(gcval.Max());
 
-            
+            for (int i = 0; i < graf.Wierzcholki.Count; i++)
+            {
+                Graf gc = algGC.Solve(i);
+                LocalSearch localSearch = new LocalSearch(graf, gc);
+                Graf ls = localSearch.Solve();
+                gcval[i] = gc.GetValueSoFarByEdge() - gc.GetDistanceSoFarByEdge();
+                Console.WriteLine(i);
+            }
+            var gcmaxIndex = gcval.ToList().IndexOf(gcval.Max());
+            var gcmin = gcval.Min();
+            var gcmean = gcval.Average();
+            Console.WriteLine(gcmin);
+            Console.WriteLine(gcmean);
+            Console.WriteLine(gcval.Max());
+
+
             //for (int i = 0; i < graf.Wierzcholki.Count; i++)
             //{
             //    Graf gcr = algGCR.Solve(i);
@@ -64,14 +68,15 @@ namespace FajnyKomiwojazer
             //    Graf gcr = rng.Compute();
             //    gcval[i] = gcr.GetValueSoFarByEdge() - gcr.GetDistanceSoFarByEdge();
             //}
-            Graf rnd = rng.Compute();
-            rnd.SaveToFile(@"C:\Users\student\source\repos\FajnyKomiwojazer2\Visualisation\rng.txt");
-            var rngmaxIndex = gcval.ToList().IndexOf(gcval.Max());
-            var rngmin = gcval.Min();
-            var rngmean = gcval.Average();
-            Console.WriteLine(rngmin);
-            Console.WriteLine(rngmean);
-            Console.WriteLine(gcval.Max());
+
+            //Graf rnd = rng.Compute();
+            //rnd.SaveToFile(@"..\..\..\Visualisation\rng.txt");
+            //var rngmaxIndex = gcval.ToList().IndexOf(gcval.Max());
+            //var rngmin = gcval.Min();
+            //var rngmean = gcval.Average();
+            //Console.WriteLine(rngmin);
+            //Console.WriteLine(rngmean);
+            //Console.WriteLine(gcval.Max());
             Console.WriteLine("Done, press any key");
             Console.ReadKey();
         }
