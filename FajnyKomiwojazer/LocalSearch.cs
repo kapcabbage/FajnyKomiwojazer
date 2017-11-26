@@ -94,7 +94,7 @@ namespace FajnyKomiwojazer
             IsValid();
             while (Step())
             {
-                IsValid();
+                //IsValid();
             }
             return _solution;
         }
@@ -111,8 +111,8 @@ namespace FajnyKomiwojazer
 
         private void RemoveVerticleMove(Wierzcholek wierzcholek)
         {
-            Krawedz e1 = _solution.Krawedzie.FirstOrDefault(k => k.Wierzcholek2 == wierzcholek);
-            Krawedz e2 = _solution.Krawedzie.FirstOrDefault(k => k.Wierzcholek1 == wierzcholek);
+            Krawedz e1 = wierzcholek.Krawedzie.FirstOrDefault(k => k.Wierzcholek2 == wierzcholek);
+            Krawedz e2 = wierzcholek.Krawedzie.FirstOrDefault(k => k.Wierzcholek1 == wierzcholek);
             _solution.AddKrawedz(new Krawedz(e1.Wierzcholek1, e2.Wierzcholek2));
             _solution.RemoveKrawedz(e1);
             _solution.RemoveKrawedz(e2);
@@ -136,7 +136,30 @@ namespace FajnyKomiwojazer
         }
 
 
-        private Krawedz BestGainEdgeAddVerticle(Wierzcholek wierzcholek, out double zysk)
+        private void SwitchVerticleMove(Wierzcholek usuwany, Wierzcholek dodawany)
+        {
+            Wierzcholek w1 = null;
+            Wierzcholek w2 = null;
+            if (usuwany.Krawedzie[0].Wierzcholek1 != usuwany)
+            {
+                w1 = usuwany.Krawedzie[0].Wierzcholek1;
+                w2 = usuwany.Krawedzie[1].Wierzcholek2;
+            }
+            else
+            {
+                w2 = usuwany.Krawedzie[0].Wierzcholek2;
+                w1 = usuwany.Krawedzie[1].Wierzcholek1;
+            }
+            _solution.RemoveKrawedz(usuwany.Krawedzie[0]);
+            _solution.RemoveKrawedz(usuwany.Krawedzie[0]);
+            _solution.AddKrawedz(new Krawedz(w1, dodawany));
+            _solution.AddKrawedz(new Krawedz(dodawany, w2));
+            _notUsed.Remove(dodawany);
+            _notUsed.Add(usuwany);
+        }
+
+
+        private Krawedz BestEdgeToAddVerticle(Wierzcholek wierzcholek, out double zysk)
         {
             Krawedz najlepsza = null;
             zysk = 0;
@@ -152,7 +175,7 @@ namespace FajnyKomiwojazer
             return najlepsza;
         }
 
-        private Wierzcholek BestGainAddVerticle(out Krawedz bestEdge, out double zysk)
+        private Wierzcholek BestAddVerticle(out Krawedz bestEdge, out double zysk)
         {
             Wierzcholek najlepszy = null;
             zysk = 0;
@@ -160,7 +183,7 @@ namespace FajnyKomiwojazer
             foreach(Wierzcholek w in _notUsed)
             {
                 double tymZysk;
-                Krawedz tymKrawedz = BestGainEdgeAddVerticle(w, out tymZysk);
+                Krawedz tymKrawedz = BestEdgeToAddVerticle(w, out tymZysk);
                 if (tymKrawedz == null)
                 {
                     continue;
@@ -176,7 +199,7 @@ namespace FajnyKomiwojazer
         }
 
 
-        private Wierzcholek BestGainRemoveVerticle(out double zysk)
+        private Wierzcholek BestRemoveVerticle(out double zysk)
         {
             Wierzcholek najlepszy = null;
             zysk = 0;
@@ -194,7 +217,7 @@ namespace FajnyKomiwojazer
             return najlepszy;
         }
 
-        private Krawedz BestGainOtherEdgeRecombine(Krawedz pierwsza, out double zysk)
+        private Krawedz BestOtherEdgeRecombine(Krawedz pierwsza, out double zysk)
         {
             Krawedz najlepsza = null;
             zysk = 0;
@@ -214,7 +237,7 @@ namespace FajnyKomiwojazer
             return najlepsza;
         }
 
-        private Krawedz BestGainRecombine(out Krawedz druga, out double zysk)
+        private Krawedz BestRecombine(out Krawedz druga, out double zysk)
         {
             Krawedz najlepsza = null;
             zysk = 0;
@@ -222,7 +245,7 @@ namespace FajnyKomiwojazer
             foreach (Krawedz krawedz in _solution.Krawedzie)
             {
                 double tymZysk;
-                Krawedz tymKrawedz = BestGainOtherEdgeRecombine(krawedz, out tymZysk);
+                Krawedz tymKrawedz = BestOtherEdgeRecombine(krawedz, out tymZysk);
                 if (tymKrawedz == null)
                 {
                     continue;
@@ -237,6 +260,65 @@ namespace FajnyKomiwojazer
             return najlepsza;
         }
 
+        private Wierzcholek BestAddedSwitchVerticle(Wierzcholek usuwany, out double zysk)
+        {
+            Wierzcholek w1 = null;
+            Wierzcholek w2 = null;
+            if (usuwany.Krawedzie[0].Wierzcholek1 != usuwany)
+            {
+                w1 = usuwany.Krawedzie[0].Wierzcholek1;
+                w2 = usuwany.Krawedzie[1].Wierzcholek2;
+            }
+            else
+            {
+                w2 = usuwany.Krawedzie[0].Wierzcholek2;
+                w1 = usuwany.Krawedzie[1].Wierzcholek1;
+            }
+            Wierzcholek najlepszy = null;
+            zysk = 0;
+            foreach (Wierzcholek dodawany in _notUsed)
+            {
+                double tymZysk = usuwany.Krawedzie[0].Dlugosc + usuwany.Krawedzie[1].Dlugosc + dodawany.Wartosc
+                            - w1.Odleglosc(dodawany) - w2.Odleglosc(dodawany) - usuwany.Wartosc;
+                if (najlepszy == null || tymZysk > zysk)
+                {
+                    najlepszy = dodawany;
+                    zysk = tymZysk;
+                }
+            }
+            return najlepszy;
+        }
+
+        /// <summary>
+        /// Returns verticle to remove
+        /// </summary>
+        /// <param name="dodawany"></param>
+        /// <param name="zysk"></param>
+        /// <returns></returns>
+        private Wierzcholek BestSwitchVerticle(out Wierzcholek dodawany, out double zysk)
+        {
+            Wierzcholek najlepszy = null;
+            zysk = 0;
+            dodawany = null;
+            foreach (Krawedz k in _solution.Krawedzie)
+            {
+                Wierzcholek tmpUsuwany = k.Wierzcholek1;
+                double tymZysk;
+                Wierzcholek tmpDodawany = BestAddedSwitchVerticle(tmpUsuwany, out tymZysk);
+                if (tmpDodawany == null)
+                {
+                    continue;
+                }
+                if (najlepszy == null || tymZysk > zysk)
+                {
+                    najlepszy = tmpUsuwany;
+                    dodawany = tmpDodawany;
+                    zysk = tymZysk;
+                }
+            }
+            return najlepszy;
+        }
+
 
         private bool Step()
         {
@@ -245,7 +327,7 @@ namespace FajnyKomiwojazer
 
             double removeZysk;
             Wierzcholek bestRemove;
-            bestRemove = BestGainRemoveVerticle(out removeZysk);
+            bestRemove = BestRemoveVerticle(out removeZysk);
 
             if (bestRemove != null && removeZysk > bestGain)
             {
@@ -256,7 +338,7 @@ namespace FajnyKomiwojazer
             double addVZysk;
             Wierzcholek bestAddV;
             Krawedz bestAddVEdge;
-            bestAddV = BestGainAddVerticle(out bestAddVEdge, out addVZysk);
+            bestAddV = BestAddVerticle(out bestAddVEdge, out addVZysk);
 
             if (bestAddV != null && addVZysk > bestGain)
             {
@@ -266,11 +348,20 @@ namespace FajnyKomiwojazer
 
             double recombineZysk;
             Krawedz druga;
-            Krawedz pierwsza = BestGainRecombine(out druga, out recombineZysk);
+            Krawedz pierwsza = BestRecombine(out druga, out recombineZysk);
             if (pierwsza != null && druga != null && recombineZysk > bestGain)
             {
                 whatToDo = WhatToDo.RecombineEdges;
                 bestGain = recombineZysk;
+            }
+
+            double switchZysk;
+            Wierzcholek dodawany;
+            Wierzcholek usuwany = BestSwitchVerticle(out dodawany, out switchZysk);
+            if (dodawany != null && usuwany != null && switchZysk > bestGain)
+            {
+                whatToDo = WhatToDo.SwitchVerticle;
+                bestGain = switchZysk;
             }
 
 
@@ -286,6 +377,9 @@ namespace FajnyKomiwojazer
                     break;
                 case WhatToDo.RecombineEdges:
                     RecombineEdgesMove(pierwsza, druga);
+                    break;
+                case WhatToDo.SwitchVerticle:
+                    SwitchVerticleMove(usuwany, dodawany);
                     break;
             }
 
