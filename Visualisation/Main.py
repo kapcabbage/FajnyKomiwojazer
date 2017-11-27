@@ -1,5 +1,5 @@
 from Plotter import Plotter
 
 plotter = Plotter()
-plotter.load("rng.txt")
+plotter.load("NNLS40.txt");
 plotter.plot(0)

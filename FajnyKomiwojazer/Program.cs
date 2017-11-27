@@ -27,7 +27,7 @@ namespace FajnyKomiwojazer
                 {
                     best = ls;
                 }
-                Console.WriteLine(i);
+                //Console.WriteLine(i);
             }
             var maxIndex = results.ToList().IndexOf(results.Max());
             Console.WriteLine($"Results {name}");
@@ -57,16 +57,75 @@ namespace FajnyKomiwojazer
                 {
                     best = ls;
                 }
-                Console.WriteLine(i);
+               // Console.WriteLine(i);
             }
             var maxIndex = results.ToList().IndexOf(results.Max());
             Console.WriteLine($"Results {name}");
             Console.WriteLine($"Min: {results.Min()}, Average: {results.Average()}, Max: {results.Max()}");
             Console.WriteLine();
             
-            best.SaveToFile(String.Format($@"..\..\..\Visualisation\RNDLS.txt"));
+            best.SaveToFile(String.Format($@"..\..\..\Visualisation\RNDLS{maxIndex}.txt"));
         }
 
+        static void TestNNLS(Graf graf)
+        {
+            string name = "Local Search based on NN.";
+            Console.WriteLine($"Starting {name}");
+
+            Graf best = null;
+
+
+            NearestNeighbour baseAlg = new NearestNeighbour(graf);
+            var results = new double[graf.Wierzcholki.Count];
+            for (int i = 0; i < graf.Wierzcholki.Count; i++)
+            {
+                Graf gc = baseAlg.Compute(i);
+                LocalSearch localSearch = new LocalSearch(graf, gc);
+                Graf ls = localSearch.Solve();
+                results[i] = gc.GetValueSoFarByEdge() - gc.GetDistanceSoFarByEdge();
+                if (results.Max() <= results[i])
+                {
+                    best = ls;
+                }
+               // Console.WriteLine(i);
+            }
+            var maxIndex = results.ToList().IndexOf(results.Max());
+            Console.WriteLine($"Results {name}");
+            Console.WriteLine($"Min: {results.Min()}, Average: {results.Average()}, Max: {results.Max()}");
+            Console.WriteLine();
+
+            best.SaveToFile(String.Format($@"..\..\..\Visualisation\NNLS{maxIndex}.txt"));
+        }
+
+        static void TestGCRLS(Graf graf)
+        {
+            string name = "Local Search based on NN.";
+            Console.WriteLine($"Starting {name}");
+
+            Graf best = null;
+
+
+            GreedyCycleWithRegrets baseAlg = new GreedyCycleWithRegrets(graf);
+            var results = new double[graf.Wierzcholki.Count];
+            for (int i = 0; i < graf.Wierzcholki.Count; i++)
+            {
+                Graf gc = baseAlg.Solve(i);
+                LocalSearch localSearch = new LocalSearch(graf, gc);
+                Graf ls = localSearch.Solve();
+                results[i] = gc.GetValueSoFarByEdge() - gc.GetDistanceSoFarByEdge();
+                if (results.Max() <= results[i])
+                {
+                    best = ls;
+                }
+                //Console.WriteLine(i);
+            }
+            var maxIndex = results.ToList().IndexOf(results.Max());
+            Console.WriteLine($"Results {name}");
+            Console.WriteLine($"Min: {results.Min()}, Average: {results.Average()}, Max: {results.Max()}");
+            Console.WriteLine();
+
+            best.SaveToFile(String.Format($@"..\..\..\Visualisation\GCRLS{maxIndex}.txt"));
+        }
 
         [STAThread]
         static void Main(string[] args)
@@ -76,7 +135,8 @@ namespace FajnyKomiwojazer
 
             TestGCLS(graf);
             TestRNDLS(graf);
-
+            TestNNLS(graf);
+            TestGCRLS(graf);
 
             Console.WriteLine("Done, press any key");
             Console.ReadKey();

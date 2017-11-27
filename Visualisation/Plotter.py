@@ -47,8 +47,8 @@ class Plotter:
             
         
         for edge in self.Edges:
-            print(edge[1])
-            print (self.Vertices[edge[1]])
+            print(edge[1],end=" -> ")
+            #print (self.Vertices[edge[1]])
             v1 = self.Vertices[edge[0]]
             v2 = self.Vertices[edge[1]]
             plt.plot([v1.X, v2.X],  [v1.Y, v2.Y], color='lightgray', linestyle='-')
