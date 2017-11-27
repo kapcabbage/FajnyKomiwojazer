@@ -93,7 +93,7 @@ namespace FajnyKomiwojazer
 
             if (oplacalne.Count() > 0)
             {
-                var newStats = oplacalne.ToList().Select(s =>
+                var newStats = oplacalne.OrderBy(o => -1 * o.Zysk).ToList().Select(s =>
                 {
                     Wierzcholek v = s.Wierzcholek;
                     return new { Wierzcholek = v, Zal = Regret(v, oplacalne.Select(ver => ver.Wierzcholek).ToList()), Przecinana = s.Przecinana };
@@ -113,23 +113,19 @@ namespace FajnyKomiwojazer
 
         private double Regret(Wierzcholek v, List<Wierzcholek> vertices)
         {
-            double regret = 0;
-            double gainNow;
-            BestGainEdge(v, out gainNow);
-            foreach(Wierzcholek other in vertices.Where(ver => ver != v))
+            List<double> zyski = _solution.Krawedzie.Select(k =>
             {
-                double notUsed;
-                Krawedz tmpEdge = BestGainEdge(other, out notUsed);
+                return k.Dlugosc - v.Odleglosc(k.Wierzcholek1) - v.Odleglosc(k.Wierzcholek2) + v.Wartosc;
+            }).OrderBy(z => -1 * z).Take(2).ToList();
 
-                AddToSolution(other, tmpEdge);
-                double gainLater;
-                BestGainEdge(v, out gainLater);
-                RollBack(tmpEdge);
-
-                regret += gainNow - gainLater;
+            if (zyski.Count < 2)
+            {
+                return 0;
             }
-
-            return regret;
+            else
+            {
+                return zyski[0] - zyski[1];
+            }
         }
 
 
