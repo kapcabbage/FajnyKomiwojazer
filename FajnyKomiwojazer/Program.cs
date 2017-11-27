@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,8 +9,10 @@ namespace FajnyKomiwojazer
 {
     class Program
     {
+        
         static void TestGCLS(Graf graf)
         {
+            Stopwatch stopwatch = new Stopwatch();
             string name = "Local Search based on Greedy Cycle.";
             Console.WriteLine($"Starting {name}");
 
@@ -17,11 +20,16 @@ namespace FajnyKomiwojazer
 
             GreedyCycle baseAlg = new GreedyCycle(graf);
             var results = new double[graf.Wierzcholki.Count];
+            var stopwatchResult = new double[graf.Wierzcholki.Count];
             for (int i = 0; i < graf.Wierzcholki.Count; i++)
             {
+                stopwatch.Reset();
                 Graf gc = baseAlg.Solve(i);
                 LocalSearch localSearch = new LocalSearch(graf, gc);
+                stopwatch.Start();
                 Graf ls = localSearch.Solve();
+                stopwatch.Stop();
+                stopwatchResult[i] = stopwatch.Elapsed.Milliseconds;
                 results[i] = gc.GetValueSoFarByEdge() - gc.GetDistanceSoFarByEdge();
                 if(results.Max() <= results[i])
                 {
@@ -32,6 +40,7 @@ namespace FajnyKomiwojazer
             var maxIndex = results.ToList().IndexOf(results.Max());
             Console.WriteLine($"Results {name}");
             Console.WriteLine($"Min: {results.Min()}, Average: {results.Average()}, Max: {results.Max()}, Best Result: {maxIndex}");
+            Console.WriteLine($"MinTime: {stopwatchResult.Min()}, AverageTime: {stopwatchResult.Average()}, MaxTime: {stopwatchResult.Max()}");
             Console.WriteLine();
             
             best.SaveToFile(String.Format($@"..\..\..\Visualisation\GCLS{maxIndex}.txt"));
@@ -39,6 +48,7 @@ namespace FajnyKomiwojazer
 
         static void TestRNDLS(Graf graf)
         {
+            Stopwatch stopwatch = new Stopwatch();
             string name = "Local Search based on Random Cycle.";
             Console.WriteLine($"Starting {name}");
 
@@ -47,11 +57,16 @@ namespace FajnyKomiwojazer
 
             RandomCycle baseAlg = new RandomCycle(graf);
             var results = new double[graf.Wierzcholki.Count];
+            var stopwatchResult = new double[graf.Wierzcholki.Count];
             for (int i = 0; i < graf.Wierzcholki.Count; i++)
             {
+                stopwatch.Reset();
                 Graf gc = baseAlg.Compute();
                 LocalSearch localSearch = new LocalSearch(graf, gc);
+                stopwatch.Start();
                 Graf ls = localSearch.Solve();
+                stopwatch.Stop();
+                stopwatchResult[i] = stopwatch.Elapsed.Milliseconds;
                 results[i] = gc.GetValueSoFarByEdge() - gc.GetDistanceSoFarByEdge();
                 if (results.Max() <= results[i])
                 {
@@ -62,6 +77,7 @@ namespace FajnyKomiwojazer
             var maxIndex = results.ToList().IndexOf(results.Max());
             Console.WriteLine($"Results {name}");
             Console.WriteLine($"Min: {results.Min()}, Average: {results.Average()}, Max: {results.Max()}");
+            Console.WriteLine($"MinTime: {stopwatchResult.Min()}, AverageTime: {stopwatchResult.Average()}, MaxTime: {stopwatchResult.Max()}");
             Console.WriteLine();
             
             best.SaveToFile(String.Format($@"..\..\..\Visualisation\RNDLS{maxIndex}.txt"));
@@ -69,6 +85,7 @@ namespace FajnyKomiwojazer
 
         static void TestNNLS(Graf graf)
         {
+            Stopwatch stopwatch = new Stopwatch();
             string name = "Local Search based on NN.";
             Console.WriteLine($"Starting {name}");
 
@@ -77,11 +94,16 @@ namespace FajnyKomiwojazer
 
             NearestNeighbour baseAlg = new NearestNeighbour(graf);
             var results = new double[graf.Wierzcholki.Count];
+            var stopwatchResult = new double[graf.Wierzcholki.Count];
             for (int i = 0; i < graf.Wierzcholki.Count; i++)
             {
+                stopwatch.Reset();
                 Graf gc = baseAlg.Compute(i);
                 LocalSearch localSearch = new LocalSearch(graf, gc);
+                stopwatch.Start();
                 Graf ls = localSearch.Solve();
+                stopwatch.Stop();
+                stopwatchResult[i] = stopwatch.Elapsed.Milliseconds;
                 results[i] = gc.GetValueSoFarByEdge() - gc.GetDistanceSoFarByEdge();
                 if (results.Max() <= results[i])
                 {
@@ -92,6 +114,7 @@ namespace FajnyKomiwojazer
             var maxIndex = results.ToList().IndexOf(results.Max());
             Console.WriteLine($"Results {name}");
             Console.WriteLine($"Min: {results.Min()}, Average: {results.Average()}, Max: {results.Max()}");
+            Console.WriteLine($"MinTime: {stopwatchResult.Min()}, AverageTime: {stopwatchResult.Average()}, MaxTime: {stopwatchResult.Max()}");
             Console.WriteLine();
 
             best.SaveToFile(String.Format($@"..\..\..\Visualisation\NNLS{maxIndex}.txt"));
@@ -99,7 +122,8 @@ namespace FajnyKomiwojazer
 
         static void TestGCRLS(Graf graf)
         {
-            string name = "Local Search based on NN.";
+            Stopwatch stopwatch = new Stopwatch();
+            string name = "Local Search based on Greedy Cycle with regret.";
             Console.WriteLine($"Starting {name}");
 
             Graf best = null;
@@ -107,11 +131,16 @@ namespace FajnyKomiwojazer
 
             GreedyCycleWithRegrets baseAlg = new GreedyCycleWithRegrets(graf);
             var results = new double[graf.Wierzcholki.Count];
+            var stopwatchResult = new double[graf.Wierzcholki.Count];
             for (int i = 0; i < graf.Wierzcholki.Count; i++)
             {
+                stopwatch.Reset();
                 Graf gc = baseAlg.Solve(i);
                 LocalSearch localSearch = new LocalSearch(graf, gc);
+                stopwatch.Start();
                 Graf ls = localSearch.Solve();
+                stopwatch.Stop();
+                stopwatchResult[i] = stopwatch.Elapsed.Milliseconds;
                 results[i] = gc.GetValueSoFarByEdge() - gc.GetDistanceSoFarByEdge();
                 if (results.Max() <= results[i])
                 {
@@ -122,6 +151,7 @@ namespace FajnyKomiwojazer
             var maxIndex = results.ToList().IndexOf(results.Max());
             Console.WriteLine($"Results {name}");
             Console.WriteLine($"Min: {results.Min()}, Average: {results.Average()}, Max: {results.Max()}");
+            Console.WriteLine($"MinTime: {stopwatchResult.Min()}, AverageTime: {stopwatchResult.Average()}, MaxTime: {stopwatchResult.Max()}");
             Console.WriteLine();
 
             best.SaveToFile(String.Format($@"..\..\..\Visualisation\GCRLS{maxIndex}.txt"));
