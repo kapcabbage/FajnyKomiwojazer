@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FajnyKomiwojazer
 {
-    public class Krawedz
+    public class Krawedz : IEquatable<Krawedz>
     {
         public Wierzcholek Wierzcholek1
         {
@@ -48,6 +48,51 @@ namespace FajnyKomiwojazer
         public override string ToString()
         {
             return String.Format($"E({Wierzcholek1.Indeks}, {Wierzcholek2.Indeks})");
+        }
+
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is Krawedz))
+                return false;
+
+            return Equals((Krawedz)obj);
+        }
+
+        public bool Equals(Krawedz other)
+        {
+            if (Object.ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            if (Object.ReferenceEquals(other, null))
+            {
+                return false;
+            }
+
+            return this.Wierzcholek1.Indeks == other.Wierzcholek1.Indeks && this.Wierzcholek2.Indeks == other.Wierzcholek2.Indeks;
+        }
+
+        public static bool operator ==(Krawedz k1, Krawedz k2)
+        {
+            if (Object.ReferenceEquals(k1, null))
+            {
+                if (Object.ReferenceEquals(k2, null))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            return k1.Equals(k2);
+        }
+
+        public static bool operator !=(Krawedz k1, Krawedz k2)
+        {
+            return !(k1 == k2);
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FajnyKomiwojazer
 {
-    public class Wierzcholek
+    public class Wierzcholek : IEquatable<Wierzcholek>
     {
         private List<Krawedz> _krawedzie = new List<Krawedz>();
 
@@ -64,6 +64,59 @@ namespace FajnyKomiwojazer
             {
                 _krawedzie = value;
             }
+        }
+
+        public Wierzcholek Clone()
+        {
+            Wierzcholek wierzcholek = new Wierzcholek();
+            wierzcholek.Indeks = Indeks;
+            wierzcholek.X = X;
+            wierzcholek.Y = Y;
+            wierzcholek.Wartosc = Wartosc;
+            return wierzcholek;
+        }
+
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is Krawedz))
+                return false;
+
+            return Equals((Krawedz)obj);
+        }
+
+        public bool Equals(Wierzcholek other)
+        {
+            if (Object.ReferenceEquals(this, other))
+                return true;
+
+            if (Object.ReferenceEquals(other, null))
+            {
+                return false;
+            }
+
+            return this.Indeks == other.Indeks;
+        }
+
+        public static bool operator ==(Wierzcholek w1, Wierzcholek w2)
+        {
+            if (Object.ReferenceEquals(w1, null))
+            {
+                if (Object.ReferenceEquals(w2, null))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            return w1.Equals(w2);
+        }
+
+        public static bool operator !=(Wierzcholek w1, Wierzcholek w2)
+        {
+            return !(w1 == w2);
         }
     }
 }

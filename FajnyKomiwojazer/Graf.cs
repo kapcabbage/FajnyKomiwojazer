@@ -167,5 +167,20 @@ namespace FajnyKomiwojazer
 
             Clipboard.SetText(sb.ToString());
         }
+
+        
+        public Graf Clone()
+        {
+            Graf graf = new Graf();
+            graf.Wierzcholki = Wierzcholki.Select(w => w.Clone()).ToList();
+            graf.Krawedzie = Krawedzie.Select(k => 
+            {
+                Krawedz newK = new Krawedz(graf.Wierzcholki[k.Wierzcholek1.Indeks], graf.Wierzcholki[k.Wierzcholek2.Indeks]);
+                newK.Wierzcholek1.Krawedzie.Add(newK);
+                newK.Wierzcholek2.Krawedzie.Add(newK);
+                return newK;
+            }).ToList();
+            return graf;
+        }
     }
 }
