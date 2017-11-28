@@ -7,7 +7,7 @@ using System.Windows;
 
 namespace FajnyKomiwojazer
 {
-    public class Graf
+    public class Graf : ICloneable
     {
         private List<Wierzcholek> _wierzcholki = new List<Wierzcholek>();
         private List<Krawedz> _krawedzie = new List<Krawedz>();
@@ -166,6 +166,12 @@ namespace FajnyKomiwojazer
             }
 
             Clipboard.SetText(sb.ToString());
+        }
+
+        
+        public object Clone()
+        {
+            throw new NotImplementedException();
         }
     }
 }
