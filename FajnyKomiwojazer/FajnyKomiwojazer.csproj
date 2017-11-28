@@ -52,6 +52,7 @@
     <Compile Include="GreedyCycleWithRegrets.cs" />
     <Compile Include="Krawedz.cs" />
     <Compile Include="LocalSearch.cs" />
+    <Compile Include="MultipleLocalSearch.cs" />
     <Compile Include="NearestNeighbour.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

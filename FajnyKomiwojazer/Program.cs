@@ -53,8 +53,6 @@ namespace FajnyKomiwojazer
             Console.WriteLine($"Starting {name}");
 
             Graf best = null;
-
-
             RandomCycle baseAlg = new RandomCycle(graf);
             var results = new double[graf.Wierzcholki.Count];
             var stopwatchResult = new double[graf.Wierzcholki.Count];
@@ -157,17 +155,40 @@ namespace FajnyKomiwojazer
             best.SaveToFile(String.Format($@"..\..\..\Visualisation\GCRLS{maxIndex}.txt"));
         }
 
+        static void TestMLS(Graf graf)
+        {
+            string name = "Multiple Local Search.";
+            Console.WriteLine($"Starting {name}");
+            MultipleLocalSearch mls = new MultipleLocalSearch(graf);
+            Graf best = null;
+            Stopwatch stopwatch = new Stopwatch();
+            int iter = 20;
+            var times = new int[iter];
+            for (int i = 0; i < iter; i++)
+            {
+                stopwatch.Reset();
+                stopwatch.Start();
+                best = mls.Compute();
+                stopwatch.Stop();
+                times[i] = stopwatch.Elapsed.Milliseconds;
+                Console.WriteLine($"Current Elapsed: {times[i]}");
+            }
+
+            Console.WriteLine($"Average: {times.Average()}");
+        }
+
+
         [STAThread]
         static void Main(string[] args)
         {
             DAO dao = new DAO();
             Graf graf = dao.GetGraf("kroA100.tsp", "kroB100.tsp");
 
-            TestGCLS(graf);
-            TestRNDLS(graf);
-            TestNNLS(graf);
-            TestGCRLS(graf);
-
+            //testgcls(graf);
+            //testrndls(graf);
+            //testnnls(graf);
+            //testgcrls(graf);
+            TestMLS(graf);
             Console.WriteLine("Done, press any key");
             Console.ReadKey();
         }
