@@ -32,8 +32,6 @@ namespace FajnyKomiwojazer
                     computed = ls;
                 }
             }
-            var maxIndex = results.ToList().IndexOf(results.Max());
-
             return computed;
         }
     }
