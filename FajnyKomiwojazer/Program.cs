@@ -184,10 +184,11 @@ namespace FajnyKomiwojazer
             DAO dao = new DAO();
             Graf graf = dao.GetGraf("kroA100.tsp", "kroB100.tsp");
 
-            //testgcls(graf);
-            //testrndls(graf);
-            //testnnls(graf);
-            //testgcrls(graf);
+            TestGCLS(graf);
+            TestRNDLS(graf);
+            TestNNLS(graf);
+            TestGCRLS(graf);
+
             TestMLS(graf);
             Console.WriteLine("Done, press any key");
             Console.ReadKey();

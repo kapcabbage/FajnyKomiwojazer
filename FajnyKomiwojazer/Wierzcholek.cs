@@ -70,7 +70,6 @@ namespace FajnyKomiwojazer
         {
             Wierzcholek wierzcholek = new Wierzcholek();
             wierzcholek.Indeks = Indeks;
-            wierzcholek.Krawedzie = new List<Krawedz>();
             wierzcholek.X = X;
             wierzcholek.Y = Y;
             wierzcholek.Wartosc = Wartosc;
@@ -91,17 +90,33 @@ namespace FajnyKomiwojazer
             if (Object.ReferenceEquals(this, other))
                 return true;
 
+            if (Object.ReferenceEquals(other, null))
+            {
+                return false;
+            }
+
             return this.Indeks == other.Indeks;
         }
 
         public static bool operator ==(Wierzcholek w1, Wierzcholek w2)
         {
+            if (Object.ReferenceEquals(w1, null))
+            {
+                if (Object.ReferenceEquals(w2, null))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
             return w1.Equals(w2);
         }
 
         public static bool operator !=(Wierzcholek w1, Wierzcholek w2)
         {
-            return !w1.Equals(w2);
+            return !(w1 == w2);
         }
     }
 }
