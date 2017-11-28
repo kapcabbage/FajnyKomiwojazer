@@ -45,7 +45,7 @@ namespace FajnyKomiwojazer
             double vx = wierzcholek.X - X;
             double vy = wierzcholek.Y - Y;
 
-            return 5 * Math.Sqrt(vx * vx + vy * vy);
+            return 6 * Math.Sqrt(vx * vx + vy * vy);
         }
         
 
