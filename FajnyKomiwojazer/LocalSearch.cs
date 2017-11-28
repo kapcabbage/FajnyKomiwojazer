@@ -100,9 +100,12 @@ namespace FajnyKomiwojazer
             return _solution;
         }
 
+        public Graf GetCurrentGraph()
+        {
+            return _solution;
+        }
 
-
-        private void AddVerticleMove(Wierzcholek wierzcholek, Krawedz krawedz)
+        public void AddVerticleMove(Wierzcholek wierzcholek, Krawedz krawedz)
         {
             _solution.RemoveKrawedz(krawedz);
             _solution.AddKrawedz(new Krawedz(krawedz.Wierzcholek1, wierzcholek));
@@ -110,7 +113,7 @@ namespace FajnyKomiwojazer
             _notUsed.Remove(wierzcholek);
         }
 
-        private void RemoveVerticleMove(Wierzcholek wierzcholek)
+        public void RemoveVerticleMove(Wierzcholek wierzcholek)
         {
             Krawedz e1 = wierzcholek.Krawedzie.FirstOrDefault(k => k.Wierzcholek2 == wierzcholek);
             Krawedz e2 = wierzcholek.Krawedzie.FirstOrDefault(k => k.Wierzcholek1 == wierzcholek);
@@ -120,7 +123,7 @@ namespace FajnyKomiwojazer
             _notUsed.Add(wierzcholek);
         }
 
-        private void RecombineEdgesMove(Krawedz krawedz1, Krawedz krawedz2)
+        public void RecombineEdgesMove(Krawedz krawedz1, Krawedz krawedz2)
         {
             _solution.RemoveKrawedz(krawedz1);
             _solution.RemoveKrawedz(krawedz2);
@@ -137,7 +140,7 @@ namespace FajnyKomiwojazer
         }
 
 
-        private void SwitchVerticleMove(Wierzcholek usuwany, Wierzcholek dodawany)
+        public void SwitchVerticleMove(Wierzcholek usuwany, Wierzcholek dodawany)
         {
             Wierzcholek w1 = null;
             Wierzcholek w2 = null;

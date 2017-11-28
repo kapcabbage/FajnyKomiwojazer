@@ -50,6 +50,7 @@
     <Compile Include="Graf.cs" />
     <Compile Include="GreedyCycle.cs" />
     <Compile Include="GreedyCycleWithRegrets.cs" />
+    <Compile Include="IteratedLocalSearch.cs" />
     <Compile Include="Krawedz.cs" />
     <Compile Include="LocalSearch.cs" />
     <Compile Include="MultipleLocalSearch.cs" />
