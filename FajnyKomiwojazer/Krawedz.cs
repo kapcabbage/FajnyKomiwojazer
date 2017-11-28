@@ -74,6 +74,7 @@ namespace FajnyKomiwojazer
             return this.Wierzcholek1.Indeks == other.Wierzcholek1.Indeks && this.Wierzcholek2.Indeks == other.Wierzcholek2.Indeks;
         }
 
+        /*
         public static bool operator ==(Krawedz k1, Krawedz k2)
         {
             if (Object.ReferenceEquals(k1, null))
@@ -94,5 +95,6 @@ namespace FajnyKomiwojazer
         {
             return !(k1 == k2);
         }
+        */
     }
 }

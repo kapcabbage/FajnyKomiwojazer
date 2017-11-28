@@ -98,6 +98,7 @@ namespace FajnyKomiwojazer
             return this.Indeks == other.Indeks;
         }
 
+        /*
         public static bool operator ==(Wierzcholek w1, Wierzcholek w2)
         {
             if (Object.ReferenceEquals(w1, null))
@@ -118,5 +119,6 @@ namespace FajnyKomiwojazer
         {
             return !(w1 == w2);
         }
+        */
     }
 }
