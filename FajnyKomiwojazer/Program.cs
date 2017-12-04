@@ -185,11 +185,43 @@ namespace FajnyKomiwojazer
         {
             string name = "Iterated Local Search.";
             Console.WriteLine($"Starting {name}");
-            IteratedLocalSearch mls = new IteratedLocalSearch(graf,5271);
+            IteratedLocalSearch mls = new IteratedLocalSearch(graf, 5271);
             Graf best = null;
             best = mls.Compute();
             best.SaveToFile(String.Format($@"..\..\..\Visualisation\ILS.txt"));
             Console.WriteLine($"Best: {best.GetValueSoFarByEdge() - best.GetDistanceSoFarByEdge()}");
+        }
+
+        static void TestATS(Graf graf)
+        {
+            int iterations = 20;
+
+            Stopwatch stopwatch = new Stopwatch();
+            string name = "Local Search based on Random Cycle.";
+            Console.WriteLine($"Starting {name}");
+
+            Graf best = null;
+            RandomCycle baseAlg = new RandomCycle(graf);
+            var results = new double[iterations];
+            var stopwatchResult = new double[iterations];
+            for (int i = 0; i < iterations; i++)
+            {
+                Console.WriteLine(i);
+                Graf wstepny = baseAlg.Compute();
+                AdaptiveTabuSearch tabuSearch = new AdaptiveTabuSearch(graf, wstepny);
+                Graf ts = tabuSearch.Solve();
+                results[i] = ts.GetValueSoFarByEdge() - ts.GetDistanceSoFarByEdge();
+                if (results.Max() <= results[i])
+                {
+                    best = ts;
+                }
+            }
+            var maxIndex = results.ToList().IndexOf(results.Max());
+            Console.WriteLine($"Results {name}");
+            Console.WriteLine($"Min: {results.Min()}, Average: {results.Average()}, Max: {results.Max()}");
+            Console.WriteLine();
+
+            best.SaveToFile(String.Format($@"..\..\..\Visualisation\ATS.txt"));
         }
 
         [STAThread]
@@ -204,7 +236,7 @@ namespace FajnyKomiwojazer
             // TestGCRLS(graf);
 
             //TestMLS(graf);
-            TestILS(graf);
+            TestATS(graf);
             Console.WriteLine("Done, press any key");
             Console.ReadKey();
         }

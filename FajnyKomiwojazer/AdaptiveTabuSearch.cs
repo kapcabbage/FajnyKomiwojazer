@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,6 +9,25 @@ namespace FajnyKomiwojazer
 {
     public class AdaptiveTabuSearch
     {
+        private int _tabuLevel = 0;
+        private int _minTabuRaise = 20;
+        private int _randTabuRaise = 30;
+        private int _minTabu = 0;
+
+        private Queue<Wierzcholek> _wierzcholkiTabu = new Queue<Wierzcholek>();
+        private Queue<Krawedz> _krawedzieTabu = new Queue<Krawedz>();
+
+        private double _highScore = 0;
+        private double _lastScore = 0;
+        private Graf _scoreHolder;
+
+        private ulong _iterations = 0;
+        private ulong _tabuDecayTick = 11;
+
+        private Stopwatch _timer = new Stopwatch();
+
+        private Random _rand = new Random();
+
         private enum WhatToDo
         {
             Nothing,
@@ -77,12 +97,14 @@ namespace FajnyKomiwojazer
             {
                 if (_solution.Krawedzie[i].Wierzcholek2 != _solution.Krawedzie[i + 1].Wierzcholek1)
                 {
+                    Console.WriteLine("Graph isn't valid");
                     return false;
                 }
             }
 
             if (_solution.Krawedzie.First().Wierzcholek1 != _solution.Krawedzie.Last().Wierzcholek2)
             {
+                Console.WriteLine("Graph isn't valid");
                 return false;
             }
 
@@ -92,12 +114,17 @@ namespace FajnyKomiwojazer
         public Graf Solve()
         {
             IsValid();
-            while (Step())
+            _timer.Start();
+            while (_timer.Elapsed.TotalMilliseconds < 7000)
             {
+                Step();
+                _iterations += 1;
                 //IsValid();
             }
+            _timer.Stop();
+            _solution = _scoreHolder;
             SortSolution();
-            return _solution;
+            return _scoreHolder;
         }
 
 
@@ -183,6 +210,10 @@ namespace FajnyKomiwojazer
             bestEdge = null;
             foreach (Wierzcholek w in _notUsed)
             {
+                if(_wierzcholkiTabu.Any(t => t.Equals(w)))
+                {
+                    continue;
+                }
                 double tymZysk;
                 Krawedz tymKrawedz = BestEdgeToAddVerticle(w, out tymZysk);
                 if (tymKrawedz == null)
@@ -207,6 +238,10 @@ namespace FajnyKomiwojazer
             foreach (Krawedz krawedz1 in _solution.Krawedzie)
             {
                 Wierzcholek wierzcholek = krawedz1.Wierzcholek2;
+                if (_wierzcholkiTabu.Any(t => t.Equals(wierzcholek)))
+                {
+                    continue;
+                }
                 Krawedz krawedz2 = _solution.Krawedzie.FirstOrDefault(k => k.Wierzcholek1 == wierzcholek);
                 double tymZysk = krawedz1.Dlugosc + krawedz2.Dlugosc - wierzcholek.Wartosc - krawedz1.Wierzcholek1.Odleglosc(krawedz2.Wierzcholek2);
                 if (najlepszy == null || tymZysk > zysk)
@@ -228,6 +263,10 @@ namespace FajnyKomiwojazer
                 {
                     continue;
                 }
+                if (_krawedzieTabu.Any(t => t.Equals(druga)))
+                {
+                    continue;
+                }
                 double tymZysk = pierwsza.Dlugosc + druga.Dlugosc - druga.Wierzcholek1.Odleglosc(pierwsza.Wierzcholek1) - pierwsza.Wierzcholek2.Odleglosc(druga.Wierzcholek2);
                 if (najlepsza == null || tymZysk > zysk)
                 {
@@ -245,6 +284,11 @@ namespace FajnyKomiwojazer
             druga = null;
             foreach (Krawedz krawedz in _solution.Krawedzie)
             {
+                if (_krawedzieTabu.Any(t => t.Equals(krawedz)))
+                {
+                    continue;
+                }
+
                 double tymZysk;
                 Krawedz tymKrawedz = BestOtherEdgeRecombine(krawedz, out tymZysk);
                 if (tymKrawedz == null)
@@ -279,6 +323,10 @@ namespace FajnyKomiwojazer
             zysk = 0;
             foreach (Wierzcholek dodawany in _notUsed)
             {
+                if (_wierzcholkiTabu.Any(t => t.Equals(dodawany)))
+                {
+                    continue;
+                }
                 double tymZysk = usuwany.Krawedzie[0].Dlugosc + usuwany.Krawedzie[1].Dlugosc + dodawany.Wartosc
                             - w1.Odleglosc(dodawany) - w2.Odleglosc(dodawany) - usuwany.Wartosc;
                 if (najlepszy == null || tymZysk > zysk)
@@ -304,6 +352,10 @@ namespace FajnyKomiwojazer
             foreach (Krawedz k in _solution.Krawedzie)
             {
                 Wierzcholek tmpUsuwany = k.Wierzcholek1;
+                if (_wierzcholkiTabu.Any(t => t.Equals(tmpUsuwany)))
+                {
+                    continue;
+                }
                 double tymZysk;
                 Wierzcholek tmpDodawany = BestAddedSwitchVerticle(tmpUsuwany, out tymZysk);
                 if (tmpDodawany == null)
@@ -320,11 +372,14 @@ namespace FajnyKomiwojazer
             return najlepszy;
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>gain</returns>
         private bool Step()
         {
             WhatToDo whatToDo = WhatToDo.Nothing;
-            double bestGain = 0;
+            double bestGain = -2000000000d;
 
             double removeZysk;
             Wierzcholek bestRemove;
@@ -366,22 +421,66 @@ namespace FajnyKomiwojazer
             }
 
 
+            if(bestGain < 0)
+            {
+                double current = _solution.GetValueSoFarByEdge() - _solution.GetDistanceSoFarByEdge();
+                if (current - _highScore > 0.01)
+                {
+                    _highScore = current;
+                    _scoreHolder = _solution.Clone();
+                    //Console.WriteLine(_highScore);
+                }
+                if (Math.Abs(_highScore - current) < 0.01 || Math.Abs(_lastScore - current) < 0.01)
+                {
+                    //Console.WriteLine($"Returned to solution, current length: {_tabuLevel}, iteration: {_iterations}");
+                    _tabuLevel = _minTabuRaise + (_rand.Next() % _minTabuRaise);
+                }
+                
+            }
+
+            if (_iterations % _tabuDecayTick == 0)
+            {
+                _tabuLevel -= 1;
+            }
+
+            if (_tabuLevel < _minTabu)
+            {
+                _tabuLevel = _minTabu;
+            }
+
+
             switch (whatToDo)
             {
-                case WhatToDo.Nothing:
-                    return false;
                 case WhatToDo.RemoveVerticle:
                     RemoveVerticleMove(bestRemove);
+                    _wierzcholkiTabu.Enqueue(bestRemove);
                     break;
                 case WhatToDo.AddVerticle:
                     AddVerticleMove(bestAddV, bestAddVEdge);
+                    _wierzcholkiTabu.Enqueue(bestAddV);
                     break;
                 case WhatToDo.RecombineEdges:
                     RecombineEdgesMove(pierwsza, druga);
+                    _krawedzieTabu.Enqueue(pierwsza);
+                    _krawedzieTabu.Enqueue(druga);
                     break;
                 case WhatToDo.SwitchVerticle:
                     SwitchVerticleMove(usuwany, dodawany);
+                    _wierzcholkiTabu.Enqueue(usuwany);
+                    _wierzcholkiTabu.Enqueue(dodawany);
                     break;
+                default:
+                    throw new Exception("This shouldn't happen.");
+            }
+
+            while (_wierzcholkiTabu.Count > _tabuLevel)
+            {
+                _wierzcholkiTabu.Dequeue();
+            }
+
+            while (_krawedzieTabu.Count > _tabuLevel)
+            {
+                _krawedzieTabu.Dequeue();
             }
 
             return true;
