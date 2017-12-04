@@ -163,20 +163,30 @@ namespace FajnyKomiwojazer
             Graf best = null;
             Stopwatch stopwatch = new Stopwatch();
             int iter = 20;
-            var times = new int[iter];
+            var times = new double[iter];
             for (int i = 0; i < iter; i++)
             {
                 stopwatch.Reset();
                 stopwatch.Start();
                 best = mls.Compute();
                 stopwatch.Stop();
-                times[i] = stopwatch.Elapsed.Milliseconds;
+                times[i] = stopwatch.Elapsed.TotalMilliseconds;
                 Console.WriteLine($"Current Elapsed: {times[i]}");
             }
 
             Console.WriteLine($"Average: {times.Average()}");
         }
 
+        static void TestILS(Graf graf)
+        {
+            string name = "Iterated Local Search.";
+            Console.WriteLine($"Starting {name}");
+            IteratedLocalSearch mls = new IteratedLocalSearch(graf,5400);
+            Graf best = null;
+            best = mls.Compute();
+
+            Console.WriteLine($"Best: {best.GetValueSoFarByEdge() - best.GetDistanceSoFarByEdge()}");
+        }
 
         [STAThread]
         static void Main(string[] args)
@@ -184,12 +194,13 @@ namespace FajnyKomiwojazer
             DAO dao = new DAO();
             Graf graf = dao.GetGraf("kroA100.tsp", "kroB100.tsp");
 
-            TestGCLS(graf);
-            TestRNDLS(graf);
-            TestNNLS(graf);
-            TestGCRLS(graf);
+            //TestGCLS(graf);
+            //TestRNDLS(graf);
+            //TestNNLS(graf);
+            // TestGCRLS(graf);
 
-            TestMLS(graf);
+            //TestMLS(graf);
+            TestILS(graf);
             Console.WriteLine("Done, press any key");
             Console.ReadKey();
         }
