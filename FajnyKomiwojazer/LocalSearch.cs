@@ -105,6 +105,11 @@ namespace FajnyKomiwojazer
             return _solution;
         }
 
+        public List< Wierzcholek> GetCurrentNotUsed()
+        {
+            return _notUsed;
+        }
+
         public void AddVerticleMove(Wierzcholek wierzcholek, Krawedz krawedz)
         {
             _solution.RemoveKrawedz(krawedz);
@@ -391,7 +396,7 @@ namespace FajnyKomiwojazer
         }
 
 
-        private void SortSolution()
+        public void SortSolution()
         {
             for (int i = 0; i < _solution.Krawedzie.Count; i++)
             {

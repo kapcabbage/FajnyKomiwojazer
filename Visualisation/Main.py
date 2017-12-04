@@ -1,5 +1,5 @@
 from Plotter import Plotter
 
 plotter = Plotter()
-plotter.load("NNLS40.txt");
+plotter.load("ILS.txt");
 plotter.plot(0)

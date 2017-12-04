@@ -168,23 +168,27 @@ namespace FajnyKomiwojazer
             {
                 stopwatch.Reset();
                 stopwatch.Start();
-                best = mls.Compute();
+                var computed = mls.Compute();
+                if (best == null ||(best.GetValueSoFarByEdge() - best.GetDistanceSoFarByEdge()) < (computed.GetValueSoFarByEdge() - computed.GetDistanceSoFarByEdge()))
+                {
+                    best = computed;
+                }
                 stopwatch.Stop();
                 times[i] = stopwatch.Elapsed.TotalMilliseconds;
                 Console.WriteLine($"Current Elapsed: {times[i]}");
             }
-
-            Console.WriteLine($"Average: {times.Average()}");
+            best.SaveToFile(String.Format($@"..\..\..\Visualisation\MLS.txt"));
+            Console.WriteLine($"Average: {times.Average()}, Best: {best.GetValueSoFarByEdge() - best.GetDistanceSoFarByEdge()}");
         }
 
         static void TestILS(Graf graf)
         {
             string name = "Iterated Local Search.";
             Console.WriteLine($"Starting {name}");
-            IteratedLocalSearch mls = new IteratedLocalSearch(graf,5400);
+            IteratedLocalSearch mls = new IteratedLocalSearch(graf,5271);
             Graf best = null;
             best = mls.Compute();
-
+            best.SaveToFile(String.Format($@"..\..\..\Visualisation\ILS.txt"));
             Console.WriteLine($"Best: {best.GetValueSoFarByEdge() - best.GetDistanceSoFarByEdge()}");
         }
 
