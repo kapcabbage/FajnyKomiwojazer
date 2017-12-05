@@ -39,7 +39,7 @@ namespace FajnyKomiwojazer
                 computed = lsAlg.Solve();
                 if((computed.GetValueSoFarByEdge() - computed.GetDistanceSoFarByEdge()) > (best.GetValueSoFarByEdge() - best.GetDistanceSoFarByEdge()))
                 {
-                    best = computed;
+                    best = computed.Clone();
                 }
             }
             Timer.Stop();

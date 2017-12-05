@@ -155,30 +155,61 @@ namespace FajnyKomiwojazer
             best.SaveToFile(String.Format($@"..\..\..\Visualisation\GCRLS{maxIndex}.txt"));
         }
 
-        static void TestMLS(Graf graf)
+        static void TestMLS()
         {
+            DAO dao = new DAO();
+
             string name = "Multiple Local Search.";
             Console.WriteLine($"Starting {name}");
-            MultipleLocalSearch mls = new MultipleLocalSearch(graf);
             Graf best = null;
-            Stopwatch stopwatch = new Stopwatch();
             int iter = 20;
-            var times = new double[iter];
-            for (int i = 0; i < iter; i++)
+            var results = new double[iter];
+            var stopwatchResult = new double[iter];
+            Parallel.For(0, iter, new ParallelOptions { MaxDegreeOfParallelism = 8 }, i =>
             {
-                stopwatch.Reset();
+                Graf graf = dao.GetGraf("kroA100.tsp", "kroB100.tsp");
+                MultipleLocalSearch mls = new MultipleLocalSearch(graf);
+                Console.WriteLine(i);
+                Stopwatch stopwatch = new Stopwatch();
                 stopwatch.Start();
                 var computed = mls.Compute();
-                if (best == null ||(best.GetValueSoFarByEdge() - best.GetDistanceSoFarByEdge()) < (computed.GetValueSoFarByEdge() - computed.GetDistanceSoFarByEdge()))
+                if (best == null || (best.GetValueSoFarByEdge() - best.GetDistanceSoFarByEdge()) < (computed.GetValueSoFarByEdge() - computed.GetDistanceSoFarByEdge()))
                 {
                     best = computed;
                 }
                 stopwatch.Stop();
-                times[i] = stopwatch.Elapsed.TotalMilliseconds;
-                Console.WriteLine($"Current Elapsed: {times[i]}");
-            }
+                stopwatchResult[i] = stopwatch.Elapsed.TotalMilliseconds;
+                results[i] = computed.GetValueSoFarByEdge() - computed.GetDistanceSoFarByEdge();
+            });
             best.SaveToFile(String.Format($@"..\..\..\Visualisation\MLS.txt"));
-            Console.WriteLine($"Average: {times.Average()}, Best: {best.GetValueSoFarByEdge() - best.GetDistanceSoFarByEdge()}");
+            best.CopyCycleToClipboard();
+            Console.WriteLine($"Min: {results.Min()}, Average: {results.Average()}, Max: {results.Max()}");
+            Console.WriteLine($"MinTime: {stopwatchResult.Min()}, AverageTime: {stopwatchResult.Average()}, MaxTime: {stopwatchResult.Max()}");
+        }
+        static void TestITS()
+        {
+            DAO dao = new DAO();
+
+            string name = "Iterated Local Search.";
+            Console.WriteLine($"Starting {name}");
+            Graf best = null;
+            int iter = 20;
+            var results = new double[iter];
+            Parallel.For(0, iter, new ParallelOptions { MaxDegreeOfParallelism = 8 }, i =>
+            {
+                Graf graf = dao.GetGraf("kroA100.tsp", "kroB100.tsp");
+                IteratedLocalSearch mls = new IteratedLocalSearch(graf, 1125);
+                Console.WriteLine(i);
+                var computed = mls.Compute();
+                if (best == null || (best.GetValueSoFarByEdge() - best.GetDistanceSoFarByEdge()) < (computed.GetValueSoFarByEdge() - computed.GetDistanceSoFarByEdge()))
+                {
+                    best = computed;
+                }
+                results[i] = computed.GetValueSoFarByEdge() - computed.GetDistanceSoFarByEdge();
+            });
+            best.SaveToFile(String.Format($@"..\..\..\Visualisation\ITS.txt"));
+            best.CopyCycleToClipboard();
+            Console.WriteLine($"Min: {results.Min()}, Average: {results.Average()}, Max: {results.Max()}");
         }
 
         static void TestILS(Graf graf)
@@ -236,8 +267,8 @@ namespace FajnyKomiwojazer
             //TestNNLS(graf);
             // TestGCRLS(graf);
 
-            //TestMLS(graf);
-            TestATS();
+            TestITS();
+            //TestATS();
             Console.WriteLine("Done, press any key");
             Console.ReadKey();
         }
