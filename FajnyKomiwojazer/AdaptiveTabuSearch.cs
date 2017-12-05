@@ -10,8 +10,8 @@ namespace FajnyKomiwojazer
     public class AdaptiveTabuSearch
     {
         private int _tabuLevel = 0;
-        private int _minTabuRaise = 20;
-        private int _randTabuRaise = 30;
+        private int _minTabuRaise = 1;
+        private int _randTabuRaise = 49;
         private int _minTabu = 0;
 
         private Queue<Wierzcholek> _wierzcholkiTabu = new Queue<Wierzcholek>();
@@ -22,7 +22,7 @@ namespace FajnyKomiwojazer
         private Graf _scoreHolder;
 
         private ulong _iterations = 0;
-        private ulong _tabuDecayTick = 11;
+        private ulong _tabuDecayTick = 13;
 
         private Stopwatch _timer = new Stopwatch();
 
@@ -433,7 +433,7 @@ namespace FajnyKomiwojazer
                 if (Math.Abs(_highScore - current) < 0.01 || Math.Abs(_lastScore - current) < 0.01)
                 {
                     //Console.WriteLine($"Returned to solution, current length: {_tabuLevel}, iteration: {_iterations}");
-                    _tabuLevel = _minTabuRaise + (_rand.Next() % _minTabuRaise);
+                    _tabuLevel = _minTabuRaise + (_rand.Next() % _randTabuRaise);
                 }
                 
             }

@@ -192,21 +192,22 @@ namespace FajnyKomiwojazer
             Console.WriteLine($"Best: {best.GetValueSoFarByEdge() - best.GetDistanceSoFarByEdge()}");
         }
 
-        static void TestATS(Graf graf)
+        static void TestATS()
         {
-            int iterations = 20;
+            int iterations = 24;
+            DAO dao = new DAO();
 
             Stopwatch stopwatch = new Stopwatch();
-            string name = "Local Search based on Random Cycle.";
+            string name = "Adaptive Tabu Search.";
             Console.WriteLine($"Starting {name}");
 
             Graf best = null;
-            RandomCycle baseAlg = new RandomCycle(graf);
             var results = new double[iterations];
             var stopwatchResult = new double[iterations];
-            for (int i = 0; i < iterations; i++)
-            {
+            Parallel.For(0, iterations, new ParallelOptions { MaxDegreeOfParallelism = 8 }, i => {
                 Console.WriteLine(i);
+                Graf graf = dao.GetGraf("kroA100.tsp", "kroB100.tsp");
+                RandomCycle baseAlg = new RandomCycle(graf);
                 Graf wstepny = baseAlg.Compute();
                 AdaptiveTabuSearch tabuSearch = new AdaptiveTabuSearch(graf, wstepny);
                 Graf ts = tabuSearch.Solve();
@@ -215,7 +216,7 @@ namespace FajnyKomiwojazer
                 {
                     best = ts;
                 }
-            }
+            });
             var maxIndex = results.ToList().IndexOf(results.Max());
             Console.WriteLine($"Results {name}");
             Console.WriteLine($"Min: {results.Min()}, Average: {results.Average()}, Max: {results.Max()}");
@@ -236,7 +237,7 @@ namespace FajnyKomiwojazer
             // TestGCRLS(graf);
 
             //TestMLS(graf);
-            TestATS(graf);
+            TestATS();
             Console.WriteLine("Done, press any key");
             Console.ReadKey();
         }

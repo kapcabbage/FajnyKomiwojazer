@@ -1,5 +1,5 @@
 from Plotter import Plotter
 
 plotter = Plotter()
-plotter.load("ILS.txt");
+plotter.load("ATS.txt");
 plotter.plot(0)
