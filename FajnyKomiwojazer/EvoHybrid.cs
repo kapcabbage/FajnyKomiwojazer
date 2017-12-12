@@ -37,9 +37,6 @@ namespace FajnyKomiwojazer
                 Graf ls = localSearch.Solve();
                 ls.Wynik = ls.GetScore();
                 ls.Representation = ls.Codify();
-                Graf graf = Graf.Decodify(_instance.Clone(), ls.Representation);
-                graf.Representation = graf.Codify();
-                Console.WriteLine(SameGraph(ls.Representation, graf.Representation));
                 if (!PerformSelection(ls))
                 {
                     i -= 1;
@@ -59,6 +56,7 @@ namespace FajnyKomiwojazer
             {
                 if(SameGraph(graf.Representation, dodawany.Representation))
                 {
+                    //Console.WriteLine("Same.");
                     return false;
                 }
             }
@@ -75,6 +73,7 @@ namespace FajnyKomiwojazer
                 }
                 if(dodawany.Wynik < worst.Wynik)
                 {
+                    //Console.WriteLine("Denied.");
                     return false;
                 }
                 _population.Remove(worst);
@@ -84,6 +83,7 @@ namespace FajnyKomiwojazer
             {
                 _best = dodawany;
             }
+            //Console.WriteLine("Added.");
             return true;
         }
 
@@ -189,10 +189,14 @@ namespace FajnyKomiwojazer
             {
                 index2 = _randomizer.Next(_population.Count);
             }
-            EvoRecombinator recomb = new EvoRecombinator();
-            List<int> newRepr = recomb.Recombine(_population[index1].Representation, _population[index2].Representation);
-            _contender = Graf.Decodify(_instance.Clone(), newRepr);
+            EvoRecombinator recomb = new EvoRecombinator(_population[index1].Representation, _population[index2].Representation, _randomizer);
+            List<int> newRepr = recomb.Recombine();
+            Graf clone = _instance.Clone();
+            _contender = Graf.Decodify(clone, newRepr);
+            LocalSearch localSearch = new LocalSearch(clone, _contender, false);
+            _contender = localSearch.Solve();
             _contender.Wynik = _contender.GetScore();
+            //Console.WriteLine(_contender.Wynik);
             _contender.Representation = _contender.Codify();
         }
     }
