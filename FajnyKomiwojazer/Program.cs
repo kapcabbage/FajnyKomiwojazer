@@ -266,6 +266,7 @@ namespace FajnyKomiwojazer
             int iter = 20;
             var results = new double[iter];
             var stopwatchResult = new double[iter];
+            var lsAmount = new double[iter];
             //Parallel.For(0, iter, new ParallelOptions { MaxDegreeOfParallelism = 1 }, i =>
             //{
             for (int i = 0; i < 20; i++)
@@ -275,13 +276,13 @@ namespace FajnyKomiwojazer
                 Console.WriteLine(i);
                 Stopwatch stopwatch = new Stopwatch();
                 stopwatch.Start();
-                
                 var computed = evo.Compute(1125);
+                stopwatch.Stop();
                 if (best == null || (best.GetValueSoFarByEdge() - best.GetDistanceSoFarByEdge()) < (computed.GetValueSoFarByEdge() - computed.GetDistanceSoFarByEdge()))
                 {
                     best = computed;
                 }
-                stopwatch.Stop();
+                lsAmount[i] = evo.LSNumber;
                 stopwatchResult[i] = stopwatch.Elapsed.TotalMilliseconds;
                 results[i] = computed.GetValueSoFarByEdge() - computed.GetDistanceSoFarByEdge();
             }
@@ -290,6 +291,7 @@ namespace FajnyKomiwojazer
             best.CopyCycleToClipboard();
             Console.WriteLine($"Min: {results.Min()}, Average: {results.Average()}, Max: {results.Max()}");
             Console.WriteLine($"MinTime: {stopwatchResult.Min()}, AverageTime: {stopwatchResult.Average()}, MaxTime: {stopwatchResult.Max()}");
+            Console.WriteLine($"MinLS: {lsAmount.Min()}, AverageLS: {lsAmount.Average()}, MaxLS: {lsAmount.Max()}");
         }
 
         [STAThread]

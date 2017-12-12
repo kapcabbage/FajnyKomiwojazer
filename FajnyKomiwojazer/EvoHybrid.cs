@@ -23,6 +23,13 @@ namespace FajnyKomiwojazer
         {
             _instance = instance;
             _randomizer = new Random();
+            LSNumber = 0;
+        }
+
+        public int LSNumber
+        {
+            get;
+            set;
         }
 
 
@@ -196,6 +203,7 @@ namespace FajnyKomiwojazer
             LocalSearch localSearch = new LocalSearch(clone, _contender, false);
             _contender = localSearch.Solve();
             _contender.Wynik = _contender.GetScore();
+            LSNumber += 1;
             //Console.WriteLine(_contender.Wynik);
             _contender.Representation = _contender.Codify();
         }
