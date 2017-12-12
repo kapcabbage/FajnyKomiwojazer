@@ -35,6 +35,8 @@ namespace FajnyKomiwojazer
 
         public void Obroc()
         {
+            Wierzcholek2.KrawedzOd = this;
+            Wierzcholek1.KrawedzDo = this;
             Wierzcholek tmp = Wierzcholek1;
             Wierzcholek1 = Wierzcholek2;
             Wierzcholek2 = tmp;
@@ -42,9 +44,14 @@ namespace FajnyKomiwojazer
 
         public Krawedz Nastepna()
         {
-            return Wierzcholek2.Krawedzie.FirstOrDefault(k => k != this);
+            return Wierzcholek2.KrawedzOd;
         }
-        
+
+        public Krawedz Poprzednia()
+        {
+            return Wierzcholek1.KrawedzDo;
+        }
+
         public override string ToString()
         {
             return String.Format($"E({Wierzcholek1.Indeks}, {Wierzcholek2.Indeks})");
@@ -73,28 +80,5 @@ namespace FajnyKomiwojazer
 
             return this.Wierzcholek1.Indeks == other.Wierzcholek1.Indeks && this.Wierzcholek2.Indeks == other.Wierzcholek2.Indeks;
         }
-
-        /*
-        public static bool operator ==(Krawedz k1, Krawedz k2)
-        {
-            if (Object.ReferenceEquals(k1, null))
-            {
-                if (Object.ReferenceEquals(k2, null))
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            return k1.Equals(k2);
-        }
-
-        public static bool operator !=(Krawedz k1, Krawedz k2)
-        {
-            return !(k1 == k2);
-        }
-        */
     }
 }

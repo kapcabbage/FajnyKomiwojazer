@@ -73,12 +73,13 @@ namespace FajnyKomiwojazer
             }).ToList();
             foreach (Wierzcholek w in _solution.Wierzcholki)
             {
-                w.Krawedzie = new List<Krawedz>();
+                w.KrawedzDo = null;
+                w.KrawedzOd = null;
             }
             foreach (Krawedz k in _solution.Krawedzie)
             {
-                k.Wierzcholek1.Krawedzie.Add(k);
-                k.Wierzcholek2.Krawedzie.Add(k);
+                k.Wierzcholek1.KrawedzOd = k;
+                k.Wierzcholek2.KrawedzDo = k;
             }
         }
 
@@ -137,30 +138,31 @@ namespace FajnyKomiwojazer
             _notUsed.Remove(wierzcholek);
         }
 
-        private void RemoveVerticleMove(Wierzcholek wierzcholek)
+        public void RemoveVerticleMove(Wierzcholek wierzcholek)
         {
-            Krawedz e1 = wierzcholek.Krawedzie.FirstOrDefault(k => k.Wierzcholek2 == wierzcholek);
-            Krawedz e2 = wierzcholek.Krawedzie.FirstOrDefault(k => k.Wierzcholek1 == wierzcholek);
-            _solution.AddKrawedz(new Krawedz(e1.Wierzcholek1, e2.Wierzcholek2));
+            Krawedz e1 = wierzcholek.KrawedzDo;
+            Krawedz e2 = wierzcholek.KrawedzOd;
             _solution.RemoveKrawedz(e1);
             _solution.RemoveKrawedz(e2);
+            _solution.AddKrawedz(new Krawedz(e1.Wierzcholek1, e2.Wierzcholek2));
             _notUsed.Add(wierzcholek);
         }
 
-        private void RecombineEdgesMove(Krawedz krawedz1, Krawedz krawedz2)
+        public void RecombineEdgesMove(Krawedz krawedz1, Krawedz krawedz2)
         {
             _solution.RemoveKrawedz(krawedz1);
             _solution.RemoveKrawedz(krawedz2);
             Krawedz poczatekOdwrocenia = new Krawedz(krawedz1.Wierzcholek1, krawedz2.Wierzcholek1);
             Krawedz koniecOdwrocenia = new Krawedz(krawedz1.Wierzcholek2, krawedz2.Wierzcholek2);
+            Krawedz doOdwrocenia = poczatekOdwrocenia.Wierzcholek2.KrawedzDo;
+            while (doOdwrocenia != null)
+            {
+                Krawedz obracana = doOdwrocenia;
+                doOdwrocenia = doOdwrocenia.Poprzednia();
+                obracana.Obroc();
+            }
             _solution.AddKrawedz(poczatekOdwrocenia);
             _solution.AddKrawedz(koniecOdwrocenia);
-            Krawedz doOdwrocenia = poczatekOdwrocenia.Nastepna();
-            while (doOdwrocenia != koniecOdwrocenia)
-            {
-                doOdwrocenia.Obroc();
-                doOdwrocenia = doOdwrocenia.Nastepna();
-            }
         }
 
 
@@ -168,18 +170,10 @@ namespace FajnyKomiwojazer
         {
             Wierzcholek w1 = null;
             Wierzcholek w2 = null;
-            if (usuwany.Krawedzie[0].Wierzcholek1 != usuwany)
-            {
-                w1 = usuwany.Krawedzie[0].Wierzcholek1;
-                w2 = usuwany.Krawedzie[1].Wierzcholek2;
-            }
-            else
-            {
-                w2 = usuwany.Krawedzie[0].Wierzcholek2;
-                w1 = usuwany.Krawedzie[1].Wierzcholek1;
-            }
-            _solution.RemoveKrawedz(usuwany.Krawedzie[0]);
-            _solution.RemoveKrawedz(usuwany.Krawedzie[0]);
+            w1 = usuwany.KrawedzDo.Wierzcholek1;
+            w2 = usuwany.KrawedzOd.Wierzcholek2;
+            _solution.RemoveKrawedz(usuwany.KrawedzDo);
+            _solution.RemoveKrawedz(usuwany.KrawedzOd);
             _solution.AddKrawedz(new Krawedz(w1, dodawany));
             _solution.AddKrawedz(new Krawedz(dodawany, w2));
             _notUsed.Remove(dodawany);
@@ -309,16 +303,8 @@ namespace FajnyKomiwojazer
         {
             Wierzcholek w1 = null;
             Wierzcholek w2 = null;
-            if (usuwany.Krawedzie[0].Wierzcholek1 != usuwany)
-            {
-                w1 = usuwany.Krawedzie[0].Wierzcholek1;
-                w2 = usuwany.Krawedzie[1].Wierzcholek2;
-            }
-            else
-            {
-                w2 = usuwany.Krawedzie[0].Wierzcholek2;
-                w1 = usuwany.Krawedzie[1].Wierzcholek1;
-            }
+            w1 = usuwany.KrawedzDo.Wierzcholek1;
+            w2 = usuwany.KrawedzOd.Wierzcholek2;
             Wierzcholek najlepszy = null;
             zysk = 0;
             foreach (Wierzcholek dodawany in _notUsed)
@@ -327,7 +313,7 @@ namespace FajnyKomiwojazer
                 {
                     continue;
                 }
-                double tymZysk = usuwany.Krawedzie[0].Dlugosc + usuwany.Krawedzie[1].Dlugosc + dodawany.Wartosc
+                double tymZysk = usuwany.KrawedzDo.Dlugosc + usuwany.KrawedzOd.Dlugosc + dodawany.Wartosc
                             - w1.Odleglosc(dodawany) - w2.Odleglosc(dodawany) - usuwany.Wartosc;
                 if (najlepszy == null || tymZysk > zysk)
                 {

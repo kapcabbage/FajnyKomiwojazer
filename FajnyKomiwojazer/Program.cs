@@ -195,7 +195,7 @@ namespace FajnyKomiwojazer
             Graf best = null;
             int iter = 20;
             var results = new double[iter];
-            Parallel.For(0, iter, new ParallelOptions { MaxDegreeOfParallelism = 8 }, i =>
+            Parallel.For(0, iter, new ParallelOptions { MaxDegreeOfParallelism = 1 }, i =>
             {
                 Graf graf = dao.GetGraf("kroA100.tsp", "kroB100.tsp");
                 IteratedLocalSearch mls = new IteratedLocalSearch(graf, 1125);
@@ -256,6 +256,42 @@ namespace FajnyKomiwojazer
             best.SaveToFile(String.Format($@"..\..\..\Visualisation\ATS.txt"));
         }
 
+        static void TestEH()
+        {
+            DAO dao = new DAO();
+
+            string name = "Hybrid Evolutionary.";
+            Console.WriteLine($"Starting {name}");
+            Graf best = null;
+            int iter = 20;
+            var results = new double[iter];
+            var stopwatchResult = new double[iter];
+            //Parallel.For(0, iter, new ParallelOptions { MaxDegreeOfParallelism = 1 }, i =>
+            //{
+            for (int i = 0; i < 20; i++)
+            {
+                Graf graf = dao.GetGraf("kroA100.tsp", "kroB100.tsp");
+                EvoHybrid evo = new EvoHybrid(graf);
+                Console.WriteLine(i);
+                Stopwatch stopwatch = new Stopwatch();
+                stopwatch.Start();
+                
+                var computed = evo.Compute(1125);
+                if (best == null || (best.GetValueSoFarByEdge() - best.GetDistanceSoFarByEdge()) < (computed.GetValueSoFarByEdge() - computed.GetDistanceSoFarByEdge()))
+                {
+                    best = computed;
+                }
+                stopwatch.Stop();
+                stopwatchResult[i] = stopwatch.Elapsed.TotalMilliseconds;
+                results[i] = computed.GetValueSoFarByEdge() - computed.GetDistanceSoFarByEdge();
+            }
+            //});
+            best.SaveToFile(String.Format($@"..\..\..\Visualisation\MLS.txt"));
+            best.CopyCycleToClipboard();
+            Console.WriteLine($"Min: {results.Min()}, Average: {results.Average()}, Max: {results.Max()}");
+            Console.WriteLine($"MinTime: {stopwatchResult.Min()}, AverageTime: {stopwatchResult.Average()}, MaxTime: {stopwatchResult.Max()}");
+        }
+
         [STAThread]
         static void Main(string[] args)
         {
@@ -267,7 +303,7 @@ namespace FajnyKomiwojazer
             //TestNNLS(graf);
             // TestGCRLS(graf);
 
-            TestITS();
+            TestEH();
             //TestATS();
             Console.WriteLine("Done, press any key");
             Console.ReadKey();

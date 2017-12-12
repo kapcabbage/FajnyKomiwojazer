@@ -54,17 +54,17 @@ namespace FajnyKomiwojazer
             return String.Format($"V{Indeks}");
         }
 
-        public List<Krawedz> Krawedzie
+        public Krawedz KrawedzDo
         {
-            get
-            {
-                return _krawedzie;
-            }
-            set
-            {
-                _krawedzie = value;
-            }
+            get;
+            set;
         }
+        public Krawedz KrawedzOd
+        {
+            get;
+            set;
+        }
+
 
         public Wierzcholek Clone()
         {
@@ -97,28 +97,5 @@ namespace FajnyKomiwojazer
 
             return this.Indeks == other.Indeks;
         }
-
-        /*
-        public static bool operator ==(Wierzcholek w1, Wierzcholek w2)
-        {
-            if (Object.ReferenceEquals(w1, null))
-            {
-                if (Object.ReferenceEquals(w2, null))
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            return w1.Equals(w2);
-        }
-
-        public static bool operator !=(Wierzcholek w1, Wierzcholek w2)
-        {
-            return !(w1 == w2);
-        }
-        */
     }
 }

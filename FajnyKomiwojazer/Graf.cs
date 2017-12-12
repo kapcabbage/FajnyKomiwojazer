@@ -9,9 +9,55 @@ namespace FajnyKomiwojazer
 {
     public class Graf
     {
+        public static Graf Decodify(Graf baseline, List<int> representation)
+        {
+            if(representation == null || representation.Count == 0)
+            {
+                return baseline;
+            }
+            for(int i = 0; i < representation.Count; i++)
+            {
+                if (i > 0)
+                {
+                    baseline.AddKrawedz(new Krawedz(baseline.Wierzcholki[representation[i - 1]], baseline.Wierzcholki[representation[i]]));
+                }
+            }
+            baseline.AddKrawedz(new Krawedz(baseline.Wierzcholki[representation.Last()], baseline.Wierzcholki[representation.First()]));
+            return baseline;
+        }
+
         private List<Wierzcholek> _wierzcholki = new List<Wierzcholek>();
         private List<Krawedz> _krawedzie = new List<Krawedz>();
 
+        public double Wynik
+        {
+            get;
+            set;
+        }
+
+        public List<int> Codify()
+        {
+            List <int> coded = new List<int>();
+            if(_krawedzie.Count == 0)
+            {
+                return coded;
+            }
+            Krawedz start = _krawedzie[0];
+            Krawedz next = start.Nastepna();
+            while (next != start)
+            {
+                coded.Add(next.Wierzcholek2.Indeks);
+                next = next.Nastepna();
+            }
+            coded.Add(start.Wierzcholek2.Indeks);
+            return coded;
+        }
+
+        public List<int> Representation
+        {
+            get;
+            set;
+        }
 
         public List<Krawedz> GetKrawedzie()
         {
@@ -68,6 +114,18 @@ namespace FajnyKomiwojazer
             _wierzcholki.Add(wiercholek);
         }
 
+
+        public double GetScore()
+        {
+            double score = 0.0d;
+            foreach (var edge in _krawedzie)
+            {
+                score -= edge.Dlugosc;
+                score += edge.Wierzcholek1.Wartosc;
+            }
+            return score;
+        }
+
         public double GetDistanceSoFar()
         {
             var distance = 0.0;
@@ -114,15 +172,15 @@ namespace FajnyKomiwojazer
         public void AddKrawedz(Krawedz krawedz)
         {
             _krawedzie.Add(krawedz);
-            krawedz.Wierzcholek1.Krawedzie.Add(krawedz);
-            krawedz.Wierzcholek2.Krawedzie.Add(krawedz);
+            krawedz.Wierzcholek1.KrawedzOd = krawedz;
+            krawedz.Wierzcholek2.KrawedzDo = krawedz;
         }
 
         public void RemoveKrawedz(Krawedz krawedz)
         {
             _krawedzie.Remove(krawedz);
-            krawedz.Wierzcholek1.Krawedzie.Remove(krawedz);
-            krawedz.Wierzcholek2.Krawedzie.Remove(krawedz);
+            krawedz.Wierzcholek1.KrawedzOd = null;
+            krawedz.Wierzcholek2.KrawedzDo = null;
         }
 
         public Wierzcholek GetWiercholek(int indeks)
@@ -176,8 +234,8 @@ namespace FajnyKomiwojazer
             graf.Krawedzie = Krawedzie.Select(k => 
             {
                 Krawedz newK = new Krawedz(graf.Wierzcholki[k.Wierzcholek1.Indeks], graf.Wierzcholki[k.Wierzcholek2.Indeks]);
-                newK.Wierzcholek1.Krawedzie.Add(newK);
-                newK.Wierzcholek2.Krawedzie.Add(newK);
+                newK.Wierzcholek1.KrawedzOd = newK;
+                newK.Wierzcholek2.KrawedzDo = newK;
                 return newK;
             }).ToList();
             return graf;

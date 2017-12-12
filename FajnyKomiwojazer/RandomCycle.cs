@@ -8,7 +8,6 @@ namespace FajnyKomiwojazer
 {
     public class RandomCycle
     {
-        private Random Randmizer;
         private Graf ComputedGraf;
         private Graf Graf;
 
@@ -16,6 +15,17 @@ namespace FajnyKomiwojazer
         {
             this.Graf = graf;
             this.Randmizer = new Random();
+        }
+        public RandomCycle(Graf graf, Random rand)
+        {
+            this.Graf = graf;
+            this.Randmizer = rand;
+        }
+        
+        public Random Randmizer
+        {
+            get;
+            set;
         }
 
         public Graf Compute()

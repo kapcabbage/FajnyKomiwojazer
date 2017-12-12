@@ -54,7 +54,7 @@ namespace FajnyKomiwojazer
             {
                 var alg = new LocalSearch(Graf,graf);
                 var currGraph = alg.GetCurrentGraph();
-                var addableVert = currGraph.Wierzcholki.Where(x => x.Krawedzie.Count == 0).ToList();
+                var addableVert = currGraph.Wierzcholki.Where(x => x.KrawedzOd == null && x.KrawedzDo == null).ToList();
                 var randVert = Randomizer.Next(currGraph.Wierzcholki.Count - addableVert.Count);
                 var randEdge1 = Randomizer.Next(currGraph.Krawedzie.Count);
                 var randEdge2 = Randomizer.Next(currGraph.Krawedzie.Count);
@@ -67,13 +67,13 @@ namespace FajnyKomiwojazer
                 switch (rand)
                 {
                     case 0:
-                        alg.RemoveVerticleMove(currGraph.Wierzcholki.Where(x => x.Krawedzie.Count != 0).ToList()[randVert]);
+                        alg.RemoveVerticleMove(currGraph.Wierzcholki.Where(x => x.KrawedzOd != null || x.KrawedzDo != null).ToList()[randVert]);
                         computed = alg.GetCurrentGraph();
                         break;
                     case 1:
                         if (addableVert.Count != 0)
                         {
-                            alg.SwitchVerticleMove(currGraph.Wierzcholki.Where(x => x.Krawedzie.Count != 0).ToList()[randVert], addableVert[Randomizer.Next(addableVert.Count)]);
+                            alg.SwitchVerticleMove(currGraph.Wierzcholki.Where(x => x.KrawedzOd != null || x.KrawedzDo != null).ToList()[randVert], addableVert[Randomizer.Next(addableVert.Count)]);
                             computed = alg.GetCurrentGraph();
                         }
                         break;
