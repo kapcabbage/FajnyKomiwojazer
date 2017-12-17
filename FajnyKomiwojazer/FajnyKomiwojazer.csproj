@@ -57,6 +57,7 @@
     <Compile Include="LocalSearch.cs" />
     <Compile Include="MultipleLocalSearch.cs" />
     <Compile Include="NearestNeighbour.cs" />
+    <Compile Include="Plotmaker.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RandomCycle.cs" />

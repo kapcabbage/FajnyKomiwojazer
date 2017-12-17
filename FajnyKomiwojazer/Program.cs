@@ -287,7 +287,7 @@ namespace FajnyKomiwojazer
                 results[i] = computed.GetValueSoFarByEdge() - computed.GetDistanceSoFarByEdge();
             }
             //});
-            best.SaveToFile(String.Format($@"..\..\..\Visualisation\MLS.txt"));
+            best.SaveToFile(String.Format($@"..\..\..\Visualisation\EH.txt"));
             best.CopyCycleToClipboard();
             Console.WriteLine($"Min: {results.Min()}, Average: {results.Average()}, Max: {results.Max()}");
             Console.WriteLine($"MinTime: {stopwatchResult.Min()}, AverageTime: {stopwatchResult.Average()}, MaxTime: {stopwatchResult.Max()}");
@@ -305,8 +305,15 @@ namespace FajnyKomiwojazer
             //TestNNLS(graf);
             // TestGCRLS(graf);
 
-            TestEH();
+            //TestEH();
             //TestATS();
+
+            Plotmaker maker = new Plotmaker();
+            maker.Instance = graf;
+            maker.Path = $@"..\..\..\Visualisation\Graphs.txt";
+            maker.SampleSize = 300;
+            maker.MakeDemPlots();
+
             Console.WriteLine("Done, press any key");
             Console.ReadKey();
         }
