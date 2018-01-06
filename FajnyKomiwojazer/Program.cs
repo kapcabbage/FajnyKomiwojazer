@@ -311,7 +311,7 @@ namespace FajnyKomiwojazer
             Plotmaker maker = new Plotmaker();
             maker.Instance = graf;
             maker.Path = $@"..\..\..\Visualisation\Graphs.txt";
-            maker.SampleSize = 300;
+            maker.SampleSize = 1000;
             maker.MakeDemPlots();
 
             Console.WriteLine("Done, press any key");
